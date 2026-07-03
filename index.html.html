@@ -1,0 +1,5907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plantas</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plantas">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0f14">
+<style>
+  :root{
+    --bg-0:#0b0f14;
+    --bg-1:#10161d;
+    --bg-2:#161d26;
+    --card:#141b23;
+    --card-hover:#1b2430;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --text-0:#eef2f6;
+    --text-1:#aab4c0;
+    --text-2:#6f7b88;
+    --accent:#ff8a3d;
+    --accent-2:#ffb347;
+    --accent-soft:rgba(255,138,61,0.14);
+    --blue:#4dabf7;
+    --green:#51cf66;
+    --purple:#b197fc;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --shadow:0 20px 50px -20px rgba(0,0,0,0.6);
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(255,138,61,0.10), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(77,171,247,0.10), transparent 55%),
+      var(--bg-0);
+    color:var(--text-0);
+    min-height:100%;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .app{
+    max-width:1180px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+    position:relative;
+  }
+
+  /* ---------- HEADER ---------- */
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:38px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .brand-mark{
+    width:46px;height:46px;
+    border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 30px -8px rgba(255,138,61,0.55);
+    flex-shrink:0;
+  }
+  .brand-mark svg{width:24px;height:24px;}
+  .brand h1{
+    font-size:19px;
+    font-weight:700;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .brand span{
+    display:block;
+    font-size:12.5px;
+    color:var(--text-2);
+    font-weight:500;
+    margin-top:2px;
+  }
+
+  .breadcrumb{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13.5px;
+    color:var(--text-1);
+    flex-wrap:wrap;
+  }
+  .breadcrumb .crumb{
+    display:flex;align-items:center;gap:8px;
+    cursor:pointer;
+    padding:6px 12px;
+    border-radius:999px;
+    transition:background .25s var(--ease), color .25s var(--ease);
+  }
+  .breadcrumb .crumb.clickable:hover{ background:var(--accent-soft); color:var(--accent-2); }
+  .breadcrumb .crumb.current{ color:var(--text-0); font-weight:600; }
+  .breadcrumb .sep{ color:var(--text-2); opacity:.6; }
+
+  /* ---------- SEARCH ---------- */
+  .search-wrap{
+    position:relative;
+    margin-bottom:26px;
+    opacity:0;
+    transform:translateY(8px);
+    animation:fadeUp .5s var(--ease) forwards;
+    animation-delay:.05s;
+  }
+  .search-wrap input{
+    width:100%;
+    padding:15px 18px 15px 46px;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border);
+    background:var(--bg-2);
+    color:var(--text-0);
+    font-size:14.5px;
+    outline:none;
+    transition:border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .search-wrap input:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  .search-wrap svg{
+    position:absolute; left:16px; top:50%; transform:translateY(-50%);
+    width:18px;height:18px; color:var(--text-2);
+    pointer-events:none;
+  }
+
+  /* ---------- VIEWS / TRANSITIONS ---------- */
+  .view{
+    position:relative;
+  }
+  .view-exit{
+    animation:viewOut .32s var(--ease) forwards;
+  }
+  .view-enter{
+    animation:viewIn .45s var(--ease) forwards;
+  }
+  @keyframes viewOut{
+    to{ opacity:0; transform:translateY(-10px) scale(.985); }
+  }
+  @keyframes viewIn{
+    from{ opacity:0; transform:translateY(14px) scale(.98); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes fadeUp{
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- ZONE GRID ---------- */
+  .zone-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+    gap:20px;
+  }
+  .zone-card{
+    position:relative;
+    border-radius:var(--radius-lg);
+    padding:30px 26px;
+    background:linear-gradient(160deg, var(--card), var(--bg-1));
+    border:1px solid var(--border);
+    cursor:pointer;
+    overflow:hidden;
+    isolation:isolate;
+    transition:transform .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
+    opacity:0;
+    transform:translateY(16px);
+    animation:fadeUp .55s var(--ease) forwards;
+  }
+  .zone-card:nth-child(1){animation-delay:.05s;}
+  .zone-card:nth-child(2){animation-delay:.12s;}
+  .zone-card:nth-child(3){animation-delay:.19s;}
+  .zone-card:nth-child(4){animation-delay:.26s;}
+
+  .zone-card::before{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(220px 220px at 85% -10%, var(--zone-glow, rgba(255,138,61,.25)), transparent 65%);
+    opacity:.7;
+    z-index:-1;
+    transition:opacity .4s var(--ease);
+  }
+  .zone-card:hover{
+    transform:translateY(-6px);
+    border-color:var(--border-strong);
+    box-shadow:var(--shadow);
+  }
+  .zone-card:hover::before{ opacity:1; }
+  .zone-card:active{ transform:translateY(-2px) scale(.99); }
+
+  .zone-icon{
+    width:52px;height:52px;
+    border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:22px;
+    background:var(--zone-bg, var(--accent-soft));
+    color:var(--zone-color, var(--accent));
+    transition:transform .4s var(--ease);
+  }
+  .zone-card:hover .zone-icon{ transform:scale(1.08) rotate(-4deg); }
+  .zone-icon svg{width:26px;height:26px;}
+
+  .zone-card h2{
+    font-size:22px;
+    margin:0 0 6px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .zone-card p{
+    margin:0;
+    font-size:13.5px;
+    color:var(--text-1);
+  }
+  .zone-count{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:18px;
+    font-size:12.5px;
+    color:var(--text-2);
+    font-weight:600;
+    letter-spacing:.02em;
+  }
+  .zone-count .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--zone-color, var(--accent));
+  }
+  .zone-arrow{
+    position:absolute;
+    right:24px; bottom:24px;
+    width:34px;height:34px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-2);
+    transition:transform .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+  }
+  .zone-card:hover .zone-arrow{
+    transform:translate(3px,-3px);
+    color:var(--bg-0);
+    background:var(--zone-color, var(--accent));
+    border-color:transparent;
+  }
+  .zone-arrow svg{width:15px;height:15px;}
+
+  /* ---------- EQUIPMENT LIST ---------- */
+  .list-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:18px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .list-header h2{
+    font-size:26px;
+    margin:0;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    display:flex; align-items:center; gap:12px;
+  }
+  .list-header .badge{
+    font-size:12px;
+    font-weight:700;
+    padding:4px 11px;
+    border-radius:999px;
+    background:var(--accent-soft);
+    color:var(--accent-2);
+  }
+  .list-header .sub{
+    font-size:13px;
+    color:var(--text-2);
+  }
+
+  .equip-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+    gap:14px;
+  }
+  .equip-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:18px 18px 16px;
+    cursor:pointer;
+    transition:transform .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeUp .4s var(--ease) forwards;
+    position:relative;
+    overflow:hidden;
+  }
+  .equip-card.general{
+    border-color:rgba(255,179,71,0.35);
+    background:linear-gradient(160deg, rgba(255,138,61,0.09), var(--card));
+  }
+  .equip-card:hover{
+    transform:translateY(-4px);
+    border-color:var(--border-strong);
+    background:var(--card-hover);
+    box-shadow:0 16px 34px -18px rgba(0,0,0,.7);
+  }
+  .equip-card .tag{
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--accent-2);
+    margin-bottom:8px;
+  }
+  .equip-card h3{
+    margin:0 0 8px;
+    font-size:16.5px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .equip-card .preview{
+    margin:0;
+    font-size:12.5px;
+    color:var(--text-2);
+    line-height:1.5;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .equip-card .go{
+    margin-top:12px;
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:600;
+    color:var(--text-2);
+    transition:color .3s var(--ease), gap .3s var(--ease);
+  }
+  .equip-card:hover .go{ color:var(--accent-2); gap:9px; }
+  .equip-card .go svg{width:13px;height:13px;}
+
+  .empty-state{
+    text-align:center;
+    padding:70px 20px;
+    color:var(--text-2);
+    border:1px dashed var(--border);
+    border-radius:var(--radius-lg);
+  }
+  .empty-state svg{width:40px;height:40px; margin-bottom:14px; opacity:.5;}
+  .empty-state h3{ color:var(--text-1); margin:0 0 6px; font-size:16px; }
+  .empty-state p{ margin:0; font-size:13.5px; max-width:360px; margin:0 auto; }
+
+  /* ---------- BACK BUTTON ---------- */
+  .back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    color:var(--text-1);
+    padding:9px 16px 9px 12px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:22px;
+    transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
+  }
+  .back-btn:hover{
+    background:var(--accent-soft);
+    color:var(--accent-2);
+    border-color:rgba(255,138,61,0.3);
+    transform:translateX(-2px);
+  }
+  .back-btn svg{width:14px;height:14px;}
+
+  /* ---------- DETAIL PANEL (slide-over) ---------- */
+  .scrim{
+    position:fixed; inset:0;
+    background:rgba(4,6,9,0.6);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .35s var(--ease);
+    z-index:40;
+  }
+  .scrim.open{ opacity:1; pointer-events:auto; }
+
+  .detail-panel{
+    position:fixed;
+    top:0; right:0; bottom:0;
+    width:min(560px, 100%);
+    background:linear-gradient(175deg, var(--bg-1), var(--bg-0));
+    border-left:1px solid var(--border);
+    z-index:41;
+    transform:translateX(100%);
+    transition:transform .45s var(--ease);
+    display:flex;
+    flex-direction:column;
+    box-shadow:-30px 0 60px -20px rgba(0,0,0,.5);
+  }
+  .detail-panel.open{ transform:translateX(0); }
+
+  .detail-head{
+    padding:26px 28px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    flex-shrink:0;
+  }
+  .detail-head .zone-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--zone-color, var(--accent));
+    background:var(--zone-bg, var(--accent-soft));
+    padding:5px 11px; border-radius:999px;
+    margin-bottom:12px;
+  }
+  .detail-head h2{
+    margin:0;
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .close-btn{
+    width:38px;height:38px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:var(--bg-2);
+    color:var(--text-1);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease), border-color .25s var(--ease);
+  }
+  .close-btn:hover{
+    background:rgba(255,90,90,0.12);
+    color:#ff6b6b;
+    border-color:rgba(255,90,90,0.3);
+    transform:rotate(90deg);
+  }
+  .close-btn svg{width:16px;height:16px;}
+
+  .detail-body{
+    padding:26px 28px 40px;
+    overflow-y:auto;
+    flex:1;
+  }
+  .detail-body .label{
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--text-2);
+    margin:0 0 14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .detail-body .label svg{width:14px;height:14px;}
+
+  .instructions{
+    font-size:15.5px;
+    line-height:1.85;
+    color:#dbe2e9;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  .instructions .line{
+    padding:14px 16px;
+    margin-bottom:10px;
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    border-left:3px solid var(--accent);
+    border-radius:10px;
+    opacity:0;
+    transform:translateX(10px);
+    animation:lineIn .4s var(--ease) forwards;
+  }
+  @keyframes lineIn{ to{ opacity:1; transform:translateX(0);} }
+
+  .instructions .line.tool-line{
+    border-left-color:var(--blue);
+  }
+  .instructions .line b{ color:var(--accent-2); font-weight:700; }
+
+  /* ---------- TRABAJOS VARIOS: day meta + task cards ---------- */
+  .day-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 22px;
+    margin-bottom:20px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-1);
+  }
+  .day-meta span{ display:inline-flex; align-items:center; gap:7px; }
+  .day-meta svg{ width:15px; height:15px; color:var(--text-2); }
+  .day-meta b{ color:var(--text-0); font-weight:700; }
+
+  .task-card{
+    background:var(--bg-2);
+    border:1px solid var(--border);
+    border-left:3px solid var(--green);
+    border-radius:14px;
+    padding:16px 18px;
+    margin-bottom:14px;
+    opacity:0;
+    transform:translateY(10px);
+    animation:lineIn .4s var(--ease) forwards;
+    transition:border-color .3s var(--ease), background .3s var(--ease);
+  }
+  .task-card:hover{ background:var(--card-hover); border-color:var(--border-strong); }
+
+  .task-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .task-loc{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--green);
+  }
+  .task-badges{ display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+
+  .pill{
+    display:inline-block;
+    font-size:10.5px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .pill.prio-a{ background:rgba(255,107,107,0.16); color:#ff8787; }
+  .pill.prio-b{ background:var(--accent-soft); color:var(--accent-2); }
+  .pill.prio-c{ background:rgba(77,171,247,0.16); color:var(--blue); }
+  .pill.prio-n{ background:rgba(255,255,255,0.08); color:var(--text-2); }
+  .pill.status-done{ background:rgba(81,207,102,0.16); color:var(--green); }
+  .pill.status-progress{ background:rgba(255,212,59,0.16); color:#ffd43b; }
+  .pill.status-other{ background:rgba(255,255,255,0.08); color:var(--text-1); }
+
+  .task-equipo{
+    margin:0 0 6px;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    color:var(--text-0);
+  }
+  .task-desc{
+    margin:0 0 12px;
+    font-size:14px;
+    line-height:1.6;
+    color:#c7d0da;
+  }
+  .task-meta{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    font-size:11.5px;
+    color:var(--text-2);
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .op-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .op-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:11.5px;
+    color:var(--text-1);
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--border);
+    padding:5px 10px 5px 8px;
+    border-radius:999px;
+  }
+  .op-chip svg{ width:12px; height:12px; color:var(--text-2); }
+  .task-incident{
+    margin-top:12px;
+    font-size:12.5px;
+    color:#ffb347;
+    background:rgba(255,179,71,0.1);
+    border:1px solid rgba(255,179,71,0.25);
+    padding:8px 12px;
+    border-radius:8px;
+  }
+
+  /* scrollbar */
+  .detail-body::-webkit-scrollbar{ width:8px; }
+  .detail-body::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:8px; }
+  .detail-body::-webkit-scrollbar-track{ background:transparent; }
+
+  footer.app-footer{
+    margin-top:60px;
+    text-align:center;
+    font-size:12px;
+    color:var(--text-2);
+    opacity:.7;
+  }
+
+  @media (max-width:640px){
+    .app{ padding:26px 16px 60px; }
+    .zone-card{ padding:24px 20px; }
+    .detail-head, .detail-body{ padding-left:20px; padding-right:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0b0f14" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 1.4 1.4l3.6-3.6a4.5 4.5 0 0 1-6.1 6.1L4.3 19.5a1.5 1.5 0 0 1-2.1-2.1L11.5 8.1a4.5 4.5 0 0 1 6.1-6.1z"/></svg>
+      </div>
+      <div>
+        <h1>PLANTAS</h1>
+        <span>Instrucciones de campo por zona y equipo</span>
+      </div>
+    </div>
+    <nav class="breadcrumb" id="breadcrumb"></nav>
+  </header>
+
+  <div id="viewport"></div>
+
+  <footer class="app-footer">Selecciona una zona para ver sus equipos</footer>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="detail-panel" id="detailPanel">
+  <div class="detail-head">
+    <div>
+      <div class="zone-pill" id="detailZonePill">ZONA</div>
+      <h2 id="detailTitle">Equipo</h2>
+    </div>
+    <button class="close-btn" id="closeBtn" aria-label="Cerrar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="detail-body">
+    <p class="label">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span id="detailLabelText">Instrucciones para realizar el trabajo</span>
+    </p>
+    <div class="instructions" id="detailInstructions"></div>
+  </div>
+</aside>
+
+<script id="data-json" type="application/json">
+{
+  "PP2": [
+    {
+      "id": "aaa-valvula-retencion-y-mangueras-teal-pp2",
+      "name": "Valvula retencion y mangueras TEAL pp2",
+      "general": true,
+      "instructions": "En la caseta del teal de pp2, requiere de un pequeño andamio. Cerca caseta operador\n\nLlevar traje aluminizado y explosimetro\n\n- La retención es de 1\"600 (Hembra/Hembra, certificada) 2 juntas aluminio 52x39.5x3mm  Llave 27 (110 Nm)\n\n- 2 mangueras con Bridas de 1/2\"600 (todas macho/macho) 4 juntas de aluminio 35x25x3mm  Llave 22 (50 Nm)"
+    },
+    {
+      "id": "c-1301b",
+      "name": "C-1301B",
+      "general": false,
+      "instructions": "Filtro de agua a ras de suelo del compresor, mirando hacia PP4\n\n6\"150 Llave 32"
+    },
+    {
+      "id": "c-1801c-filtro",
+      "name": "C-1801C (Filtro)",
+      "general": false,
+      "instructions": "Entre extrusor PP2 y planta, por detrás PP4. Una de las 3 soplantes\n\nHace falta andamio, uno frontal y (otro lateral mas alto que el otro) para poder coger bien el filtro (y el fuelle)\n\n3 Juntas de cartón 10\"150 Llave 30-32 es un chino dentro de un fuelle\n\nLlevar Llave 19 (o 2 inglesas) para apretar/aflojar las varillas del fuelle y sacar el filtro"
+    },
+    {
+      "id": "d-1106-filtro",
+      "name": "D-1106 (Filtro)",
+      "general": false,
+      "instructions": "Zona catalizadores   (Arriba)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
+    },
+    {
+      "id": "d-1113-filtro",
+      "name": "D-1113 (Filtro)",
+      "general": false,
+      "instructions": "Zona catalizadores    (Abajo)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
+    },
+    {
+      "id": "d-1115-filtro",
+      "name": "D-1115 (Filtro)",
+      "general": false,
+      "instructions": "Zona catalizadores    (Arriba)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
+    },
+    {
+      "id": "d-1116-filtro",
+      "name": "D-1116 (Filtro)",
+      "general": false,
+      "instructions": "Zona catalizadores    (Abajo)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
+    },
+    {
+      "id": "d-1502",
+      "name": "D-1502",
+      "general": false,
+      "instructions": "Empieza en la primera planta, al lado BB/HH R-1401\n\n\n1 Planta\n\n\nEn andamio desmontar carrete 10\"150 Llave 36 Juntas teflon (Tiene un picaje con una brida 2\"150 Llave 27 junta espiro que hay que desmontar) y colocar BB/CC en parte inferior a carrete\n\nEn andamio sacar otra linea (picaje) 2\"150 Llave 27 junta espiro\n\nEn andamio desmontar codo 16\"150 Llave 41 Juntas de teflon (Llevar puly 750Kg. con 1 estrobo de tamaño medio y 2 grilletes) Tiene un enganche para colocar el puly encima del codo. La BB/CC para el codo esta en el suelo\n\nEn andamio desmontar tapa con bisagra Llave 32 ¿8\"150? Lleva junta teflon\n\nColocar disco (de los finos) 4\"150 Llave 27 en val. mariposa (parte superior) Junta teflón (o cartón)\n\n\n2 Planta\n\n\nAbrir BB/HH 28\"150 Llave 50 junta Teflon\n\nAl lado ES-29 colocar disco 1/2\"150 Llave 22 Junta espiro\n\nAbrir 1 mirilla cristal Llave 22\n\nHay que abrir 2 registros en el interior (Los 2 únicos que no están soldados) Llave 12-13 y 14-15\n\n\n3 Planta\n\n\nSacar fuelle 8\"150 Llave 32 (Junta espiro) y colocar BB/CC en parte superior\n\nDesmontar 2 mirillas de cristal llave 22\n\nEn andamio colocar disco 16\"150 Llave 41 Junta espiro (Suele estar el disco en un lateral en el suelo) Hay que coger del codo donde va el disco a la viga que hay justo al lado de las escaleras con un trackel de 750 Kg y tirar para que entre el disco"
+    },
+    {
+      "id": "d-1903a-b-c-d-venteos",
+      "name": "D-1903A-B-C-D (Venteos)",
+      "general": false,
+      "instructions": "En los silos arriba de todo, los venteos que se desmontan y se limpia la rafia con una persona de obra civil\n\nLlave 36 abierta y cerrada (Llaves manuales no de golpeo)"
+    },
+    {
+      "id": "e-1208-filtro-agua",
+      "name": "E-1208 (Filtro agua)",
+      "general": false,
+      "instructions": "A ras de suelo en rack central pp2, intercambiador grande de placas\n\nJunta espiro de 16\"150 Llave 41"
+    },
+    {
+      "id": "e-1209-filtro-agua",
+      "name": "E-1209 (Filtro agua)",
+      "general": false,
+      "instructions": "A ras de suelo en rack central pp2, intercambiador grande de placas\n\nJunta espiro de 16\"150 Llave 41"
+    },
+    {
+      "id": "e-1303-filtro-agua",
+      "name": "E-1303 (Filtro agua)",
+      "general": false,
+      "instructions": "1 planta, junto barandilla\n\n4\"150 espiro    Llave 27"
+    },
+    {
+      "id": "e-1411-filtro-agua",
+      "name": "E-1411 (Filtro agua)",
+      "general": false,
+      "instructions": "A la entrada de planta cerca escaleras acceso R-1401\n\nTapa 12\"150     1 Junta espirometalica    Llave 36"
+    },
+    {
+      "id": "e-1412-filtros-cw-a-y-b",
+      "name": "E-1412 (Filtros CW A y B)",
+      "general": false,
+      "instructions": "Al lado escaleras accesos R-1401, zona nueva\n\nBrida 12\"150    junta espiro    Llave 36"
+    },
+    {
+      "id": "e-1502",
+      "name": "E-1502",
+      "general": false,
+      "instructions": "Rack central PP2 a ras de suelo\n\nIntercambiador de placas\n\nLlave y vaso 46\n\nLos espárragos están soldados de la cabeza para que salgan por el lado correcto"
+    },
+    {
+      "id": "f-1104-a",
+      "name": "F-1104-A",
+      "general": false,
+      "instructions": "A ras de suelo zona catalizadores\n\nTapa con junta custom de cartón (unas 3\")   Llave 17\n\nLa tapa va unida a 2 bridas de 1\"300 con junta espiro   Llave 27\n\nTanto la junta como el cartucho que lleva se sacan de almacen"
+    },
+    {
+      "id": "f-1104-b",
+      "name": "F-1104-B",
+      "general": false,
+      "instructions": "A ras de suelo zona catalizadores\n\nTapa con junta custom de cartón (unas 3\")   Llave 17\n\nLa tapa va unida a 2 bridas de 1\"300 con junta espiro   Llave 27\n\nTanto la junta como el cartucho que lleva se sacan de almacen"
+    },
+    {
+      "id": "f-1302",
+      "name": "F-1302",
+      "general": false,
+      "instructions": "Filtro guarda arriba de todo. debajo filtro mangas\n\nSubir cajas filtros con grúa (4 cajas) 56 cartuchos\n\nUsar Big bags para subir y bajar materiales (con grúa)\n\nUna pareja de obra civil para limpiar y colocar plásticos\n\nTraje aluminio, contiene TEAL. Llevar cordil para abrir filtro\n\n2 Discos en 8 de 1\"300   juntas espiro   Llave 27\n\n3 DD/CC de 1 1/2\"300  Juntas espiro   Llave 32\n\n2 DD/CC (finos) 10\"150   Llave 36   (Un disco lleva juntas de cartón y el otro espiro)    \n\nJunta tapa de cartón \"custom\" Llave 27\n\nVarillas interiores Llave 17\n\nLlevar pinza hidráulica para los DD/CC\n\nLos DD/CC se encuentran en la zona (Sino se los han llevado)"
+    },
+    {
+      "id": "f-1302b",
+      "name": "F-1302B",
+      "general": false,
+      "instructions": "Casi arriba de todo, encima R-1402\n\n2 DD/CC 1 1/2\" 300   Llave 32\n\n2 DD/CC 10\" 150   Llave 36\n\nTapa llave 46\n\nVarillas dentro equipo llave 30\n\nSubir cajas filtros con grua (2 cajas) 2 filtros\n\nUna pareja de obra civil para limpiar y colocar plásticos\n\nUsar Big bags para subir y bajar materiales si es posible (con grúa)\n\nTraje aluminio, contiene TEAL. Llevar cordil para abrir filtro\n\nLos DD/CC están en planta\n\nFiltro de 2 cartuchos"
+    },
+    {
+      "id": "f-1305a-b",
+      "name": "F-1305A-B",
+      "general": false,
+      "instructions": "Entrando en rack central PP2 a la derecha, subiendo escaleras de gato\n\nCada filtro:\n\n1 DD/CC 2\" 150 Llave 27\n\n2 DD/CC 10\" 150 Llave 36\n\nTapa 24\" 150 Junta espiro Llave 50\n\nLlave 17 para desmontar internos\n\n12 cartuchos con sus 12 juntas de goma cuadradas, se pegan con Loctite\n\nLlevar pinza hidráulica para abrir bridas de los discos\n\nLos discos están en planta\n\nPrimero se colocan los DD/CC, después se hace el andamio para abrir/cerrar la tapa (Con un puly de 750KG) y después de desmontar el andamio se quitan los DD/CC\n\nSolarca se lleva los cartuchos sucios para limpiarlos, a veces cuando vuelven nos piden que los metamos en el horno de pp2 para acabar de secarlos. (Pero por lo general, llegan de Solarca sin necesidad de secarlos)"
+    },
+    {
+      "id": "f-1308a-b",
+      "name": "F-1308A-B",
+      "general": false,
+      "instructions": "A la entrada de planta en el compresor viejo subiendo unas escaleras, quedan a la altura de las rodillas\n\nCada filtro lleva una brida 10\"150  Llave 36 y una brida 1 1/2\"300  Llave 32  (Juntas espiro) \n\nLlevar traje TEAL"
+    },
+    {
+      "id": "f-1309",
+      "name": "F-1309",
+      "general": false,
+      "instructions": "Filtro a Ras de suelo en el compresor\n\nCarrete de 10\"150, hace falta andamio\n\nLlave 36\n\n3 Juntas espiro 10\"150\n\nLlave inglesa para desmontar tubing y poder girar carrete"
+    },
+    {
+      "id": "f-1501",
+      "name": "F-1501",
+      "general": false,
+      "instructions": "En la planta inferior al filtro guarda F-1302 (el de 56 cartuchos) casi arriba de todo, tocando la barandilla que mira a pp3\n\nGirar codo de 6\" 150 para acceder a la reducción y al equipo Llave 32  el codo tiene una brida de 1/2\"150  Llave 22\n\nLa reducción es de 6\"150 a 10\"150   Llave 32 y 36\n\nLleva 6 cartuchos (A cada cartucho nuevo hay que soldarle un tornillo de M8x35 con tuerca de INOX)  \nLlave 17 y Llave 18-19 para los cartuchos \n\nPara sacarlo hay que meter una palpalina o varilla por unas orejetas y sacar todos los filtros a la vez (2 personas)\n\n(2 juntas de 10\"150, 2 juntas de 6\"150 y 1 junta de 1/2\"150, todo espirometalica)"
+    },
+    {
+      "id": "f-1507",
+      "name": "F-1507",
+      "general": false,
+      "instructions": "Al lado de las escaleras para subir a los reactores hay unas escaleras de gato que suben a una plataforma\n\nEl cabezal es de 8\"150 Llave 32 (junta de teflón), también tiene 2 bridas de 1/2\"150 Llave 22 (juntas espiro) y una de 2\"150 Llave 27 (Junta espiro), hay que desmontar un tubing con la inglesa tambien\n\nAl sacar el cabezal hay que sacar una placa que presiona las mangas 4 tornillos llave 8-9 (o inglesa)\n\nLleva 4 mangas (pequeñas), cada manga lleva una torica (la torica hay que pedirla a parte)"
+    },
+    {
+      "id": "f-1802a-b",
+      "name": "F-1802A-B",
+      "general": false,
+      "instructions": "Fuera de extrusor a ras de suelo mirando hacia planta polimerización de pp2, por detrás de pp4  (Filtros Coco)\n\nSe monta andamio con barra de carga para llegar al cabezal y poder desmontarlo (a veces se usa carretilla para desmontar el cabezal)\n\nLos tornillos del cabezal son llave 24 y los internos también son 24\n\nCada filtro lleva 3 filtros de coco\n\nLa junta es de neopreno blanco de 3mm hecha a mano  (Aunque en alguna ocasión se pone goretex)\n\nLlevar puly 750kg y estrobo (solo si se desmonta con barra de carga)\n\nLa varilla interior ha de coincidir con un cap soldado en la parte interna del cabezal"
+    },
+    {
+      "id": "f-1809a",
+      "name": "F-1809A",
+      "general": false,
+      "instructions": "Dentro del extrusor a ras de suelo (Filtros Coco)\n\nSe desmonta cabezal a mano, minimo 2 personas (a veces se queda pegado y hay que usar un útil para despegarlo)\n\nLos tornillos del cabezal son llave 24 y los internos también son 24\n\nLleva 2 filtros de coco\n\nLa junta es de neopreno blanco de 3mm hecha a mano  (Aunque en alguna ocasión se pone goretex)\n\nLa varilla interior ha de coincidir con un cap soldado en la parte interna del cabezal"
+    },
+    {
+      "id": "f-1817",
+      "name": "F-1817",
+      "general": false,
+      "instructions": "En extrusión en la caseta de peróxido (la habitación frente a los silos)\n\nLa tapa es llave 19 y lleva una junta custom de cartón sacada de almacen\n\nPara acceder al filtro hay que desmontar 2 bridas 3/4\"300 con juntas espiro (2 juntas)\n\nEs un cartucho (parecido al de los catalizadores de PBD)"
+    },
+    {
+      "id": "f-1821",
+      "name": "F-1821",
+      "general": false,
+      "instructions": "2 Planta edificio extrusor\n\nAndamio \n\n1 Cartuchos grandote\n\nTapa \"custom\" junta goma con agujeros Llave 17   \n\nTornillos cartucho interior Llave 12-13   (o inglesa pequeña)"
+    },
+    {
+      "id": "f-1822",
+      "name": "F-1822",
+      "general": false,
+      "instructions": "1 Planta edificio extrusor\n\nAndamio (se puede hacer con una plataforma)\n\n2 Cartuchos grandotes\n\nTapa \"custom\" junta goma con agujeros Llave 19   (24 tornillos M12x30) \n\nTornillos cartuchos interiores Llave 12-13    (o inglesa pequeña)"
+    },
+    {
+      "id": "f-1902a",
+      "name": "F-1902A",
+      "general": false,
+      "instructions": "En la zona de los silos junto a la escalera que mira a la playa a ras de suelo (Filtros Coco)\n\nSe desmonta cabezal a mano, minimo 2 personas (a veces se queda pegado y hay que usar un útil para despegarlo)\n\nLos tornillos del cabezal son llave 24 y los internos también son 24\n\nLleva 2 filtros de coco\n\nLa junta es de neopreno blanco de 3mm hecha a mano  (Aunque en alguna ocasión se pone goretex) \n\nLa varilla interior ha de coincidir con un cap soldado en la parte interna del cabezal"
+    },
+    {
+      "id": "f-1914",
+      "name": "F-1914",
+      "general": false,
+      "instructions": "En la segunda planta de la torre que hay frente a la carretera (silos de extrusión pp2)\n\nEs un filtro con 2 cartuchos grandes\n\nLleva unos enganches para llegar al filtro (se abren con la mano, sin herramientas)\n\nY se desmontan aflojando una palometas (También a mano)"
+    },
+    {
+      "id": "p-1303",
+      "name": "P-1303",
+      "general": false,
+      "instructions": "A la entrada de planta al lado del compresor\n\nLlave grifa\n\nLleva junta de grafito ancha"
+    },
+    {
+      "id": "p-1303b",
+      "name": "P-1303B",
+      "general": false,
+      "instructions": "A la entrada de planta al lado del compresor\n\nLlave 22\n\nJunta de grafito con aro exterior (junta tipo custom)"
+    },
+    {
+      "id": "p-1501a-b",
+      "name": "P-1501A-B",
+      "general": false,
+      "instructions": "Al entrar en planta PP2 por Rack central a Ras de suelo\n\nCada filtro: 1 Junta 6\"150 espiro y 2 juntas 3\"150 espiro\n\nLlave 32 y 27\n\nHay un útil al lado de la caja de Chica para separar si no abre"
+    },
+    {
+      "id": "p-1502a-b",
+      "name": "P-1502A-B",
+      "general": false,
+      "instructions": "Al entrar en planta PP2 por Rack central a Ras de suelo\n\nCada filtro: 1 Junta 4\"150 espiro y 2 juntas 3\"150 de carton\n\nLlave 27\n\nHay un útil al lado de la caja de Chica para separar si no abre"
+    },
+    {
+      "id": "r-1402",
+      "name": "R-1402",
+      "general": false,
+      "instructions": "Planta 0 escaleras de gato.\n\n\n\n1 plataforma, desmontar válvula 3\"300 y montar acople en parte superior y BB/CC en la inferior\n\n2 Plataforma, 2= DD/8 1/2\"300 Llave 22\n\n\n\nPlanta 0\n\nAl lado compresor. 1 DD/CC 3/4\"150 Llave 22, 1 DD/CC 1\"300 Llave 27\n\nFrente escaleras. 1 DD/CC 2\"300 Llave 27, 2 DD/8 1\"300 Llave 27\n\nNicolini 1 1/2\"300 x 1\"300 Llave 32 y 27  (la de 1 1/2\"300 lleva una junta de grafito dentro de la linterna interior, suele usarse la misma)\n\nCarrete de 6\"300 x 3\"300 Llave 32\n\nEn el andamio. Girar codo mas carrete reducción (3 Bridas) 6\"300 Llave 32. 2 Bridas 1\"300 Llave 27 (1 Brida es de la valvula de instrumentacion) y 1 brida 3\"300 Llave 32\n\nLateral escalera. 1 DD/CC 6\"300 Llave 32\n\n\n\nPlanta 1\n\n3= DD/8 1\"300 Llave 27, 1= DD/8 RTJ 1\"1500 Llave 36, 4= DD/CC 1/2\"300 Llave 22.\n\nEn el andamio, 2 DD/CC 1/2\"300 Llave 22\n\nPasarela 1 DD/8 1\"300 Llave 27\n\nEn andamio, 2 LT de 4\"300 Llave 32 (una junta solo) Se coloca BB/CC\n\nEn andamio, 1 disco fino con cruceta de 24\"300 Llave 60\n\nEn andamio, 3 codos de 2\"300 Llave 27\n\nDesmontar para limpieza, válvula mas carrete mas FV-13102 (todo 3\"300) Llave 32. Dependiendo de si se desmonta el carrete por completo hay que poner en la parte inferior o 2 DD/CC 3/4\"300 Llave 27 o 2 BB/CC 3/4\"300\n\n\nPlanta 2\n\n2 DD/8 de 1 1/2\"300, 1 DD/CC 1 1/2\"300 (Quitar calorifugado) Llave 32\n\n2 DD/CC 1/2\"300 , 1 DD/8 1/2\"300 Llave 22\n\nDesmontar eyector 1 Brida 2\"300 con tornillos llave 24 mas 2 bridas 1/2\"300 Llave 22\n\n1 LT de 4\"300  Llave 32 (solo una junta) Se coloca BB/CC\n\nBB/HH 24\"300 Llave 60. Se usa una moza para calzar el pescante de la BB/HH y una palpalina grande. Ademas al cerrar se le pone goretex para que haga mejor cierre. \n\nLos tornillos de los registros interiores son llave 17\n\n\nPlanta 3 (No hay nada)\n\n\nPlanta 4\n\nVal. izquierda DD/8 8\"300 Llave 36\n\nval. derecha   DD/8 8\"300 Llave 36\n\nVal. central   10\"300 Llave 41, se gira con un tracktel 750kg. cogido a la orejeta del cabezal de la planta superior\n\nDD/8 4\"300   Llave 32\n\nEn andamio DD/CC 6\"300  (mala postura) Lleva pinza hidráulica\n\n\nPlanta 5\n\nDD/8 4\"300    Llave 32\n\n3 LT´s 4\"300   Llave 32 en cabeza reactor (Se coloca BB/CC, Cada LT lleva junta doble en esta planta)\n\nBB/HH 24\"300   Llave 60   se usa polipasto para dejar en el tramex encima de la viga, llevar estrobos. Se le pone goretex para el cierre \n\n\nPlanta 6\n\nEn andamio, 2 DD/8 2\"300 Llave 27, 2 DD/8 1\"300 Llave 27 y 2 DD/CC 1/2\"300 Llave 22"
+    }
+  ],
+  "PP3": [
+    {
+      "id": "aaa-valvula-retencion-y-mangueras-teal-pp3",
+      "name": "Valvula retencion y mangueras TEAL pp3",
+      "general": true,
+      "instructions": "En la caseta del teal de pp3, requiere de un pequeño andamio \n\nLlevar traje aluminizado y explosimetro\n\n- La retención es de 1/2\"600 (tiene que estar certificada) 2 juntas cobre 34.5x25.5x3mm  Llave 22\n\n- 1 manguera Brida PN10/40 DN20/20.9 1 junta de cobre 48x36x2mm (Las medidas pueden variar ligeramente, a veces las hace el tornero). Por el otro extremo la brida que hay lleva una junta de cartón que proporciona y monta producción  Llave 22\n\n- 1 manguera Brida PN10/40 DN15/21.3 1 junta de cobre 39x29x2.5mm (Las medidas pueden variar ligeramente, a veces las hace el tornero). Por el otro extremo la brida que hay lleva una junta de cartón que proporciona y monta producción   Llave 22"
+    },
+    {
+      "id": "c-502a-b",
+      "name": "C-502A-B",
+      "general": false,
+      "instructions": "Al lado compresores, en una pequeña plataforma a 1 metro del suelo\n\n2 Juntas de cartón de 14\"150   Llave 41\n\n1 Junta DN300 PN10 378x324mm(es similar a 10\"150)   Llave 32"
+    },
+    {
+      "id": "c-901a",
+      "name": "C-901A",
+      "general": false,
+      "instructions": "Frente a extrusión PP3, dentro de la cabina insonorizada\n\n1 Filtro grande\n\nAflojar tuerca llave 24 (o inglesa) para sustituirlo\n\nLlevar tapones"
+    },
+    {
+      "id": "c-902b",
+      "name": "C-902B",
+      "general": false,
+      "instructions": "Frente a extrusión PP3, dentro de la cabina insonorizada\n\n1 Filtro grande\n\nAflojar tuerca llave 24 (o inglesa) para sustituirlo\n\nLlevar tapones"
+    },
+    {
+      "id": "e-202-filtro-cw",
+      "name": "E-202 (Filtro CW)",
+      "general": false,
+      "instructions": "Intercambiador grande rack central (Fuente luminosa)\n\nJunta espiro 14\"150    Llave 41"
+    },
+    {
+      "id": "e-502-filtros-cw",
+      "name": "E-502 (Filtros CW)",
+      "general": false,
+      "instructions": "A mitad de pasillo central junto intercambiador pequeño de placas, a ras de suelo\n\nRequiere de una plataforma o escalera móviles para llegar\n\nSon dos filtros iguales\n\nLa junta es de goma blanca cortada a mano (a veces se coloca goretex)  Llave 24   (Cada filtro)"
+    },
+    {
+      "id": "e-505-filtros",
+      "name": "E-505 (Filtros)",
+      "general": false,
+      "instructions": "Intercambiador muy pequeño a ras de suelo, Rack central (en el C-501)\n\nEl filtro de CW se hace con Llave grifa\n\nEl filtro lado proceso es de 3\"150 junta espiro  Llave 27"
+    },
+    {
+      "id": "e-663-filtro-cw",
+      "name": "E-663 (Filtro CW)",
+      "general": false,
+      "instructions": "Entrando en planta por el rack, justo entrar a la derecha, filtro a la altura de la cadera\n\nSolo hace falta una grifa (un poco mas grande que la estándar) es una rosca"
+    },
+    {
+      "id": "f-308-a-y-b-filtro-c-301",
+      "name": "F-308-A y B (Filtro C-301)",
+      "general": false,
+      "instructions": "Filtro del compresor (El filtro \"A\" es el de difícil acceso, el \"B\" es mas cómodo de hacer)\n\nSubiendo las escalerillas al compresor, final de planta \n\nJunta 8\" (encastrada de grafito aunque en ocasiones se ha hecho a mano de cartón) Llave 36\n\nJunta 1/2\" 300 Espirometalica Llave 22\n\nTraje teal"
+    },
+    {
+      "id": "p-502a-b",
+      "name": "P-502A-B",
+      "general": false,
+      "instructions": "Limpiar filtros\n\n2 Juntas Espiro 4\"150 (cada filtro) Llave 27"
+    }
+  ],
+  "PBD": [
+    {
+      "id": "aaa-grado-cable",
+      "name": "Grado cable",
+      "general": true,
+      "instructions": "El grado cable son 3 permisos:\n\nFE-2059A (Filtro imanes)\n\nRejillas salida aire (Al lado silo ME-2055)\n\nFiltros ventiladores (Torre de mezcla):\n\nPZ-2021-A,b,c,d,e y f\n\nPZ-2024-A,b,c,d,e,f y g\n\nPZ-2036 (Pelletron) arriba de todo\n\nHacen falta unos 15 filtros de 500x500 y  1 filtro de 1000x1200 para el pelletron"
+    },
+    {
+      "id": "fe-2059a",
+      "name": "FE-2059A",
+      "general": false,
+      "instructions": "Equipo grado cable, filtro imanes\n\nTapa 18\"150 Llave 46 Junta Teflón (No suele cambiarse)\n\nLos filtros se desenroscan a mano y se limpian con un trapo\n\nEstan bastante viejos y torcidos, al roscarlos con medio giro es suficiente, sin apretar sino no hay forma de aflojarlo a la siguiente vez"
+    },
+    {
+      "id": "fz-1113",
+      "name": "FZ-1113",
+      "general": false,
+      "instructions": "A la entrada del extrusor, frente al ME-1056. A ras de suelo\n\nTapa \"custom\", Junta torica     (El diámetro es entre 2 y 3 pulgadas)\n\nLlave 24\n\nEquipo y espárragos de INOX"
+    },
+    {
+      "id": "fz-2063",
+      "name": "FZ-2063",
+      "general": false,
+      "instructions": "Dentro extrusor, a ras de suelo junto a la criba\n\nTapa 8\"150    Llave 32    (La junta es de teflón, se suele usar la misma)\n\n1 Cartucho de plástico\n\nSi no hay recambio se limpia como se pueda. Equipo y tornillería de INOX"
+    },
+    {
+      "id": "pc-1038a-b-c-d",
+      "name": "PC-1038A-B-C-D",
+      "general": false,
+      "instructions": "Al lado refrigerantes, a ras de suelo. Reaccion\n\nPara limpiar los filtros:\n\nEl \"A\" y \"D\" son Llave 22\n\nEl \"B\" y \"C\" son Llave 27\n\nLas juntas son de cartón cortadas a mano"
+    },
+    {
+      "id": "pc-2038a-b-c-d",
+      "name": "PC-2038A-B-C-D",
+      "general": false,
+      "instructions": "Al lado refrigerantes, a ras de suelo. Reaccion\n\nPara limpiar los filtros:\n\nEl \"A\" es Llave 27\n\nEl \"B\",\"C\" y \"D\" son Llave 22\n\nLas juntas son de cartón cortadas a mano"
+    },
+    {
+      "id": "px-3002a-b",
+      "name": "PX-3002A-B",
+      "general": false,
+      "instructions": "Al lado balsa de los patos, Servicios\n\nPara limpiar filtros:\n\nImpulsion-  2 Juntas cartón 8\"150   Llave 32  (El filtro es una raqueta)\n\nAspiracion- 1 Junta cartón 3\"150 y 2 juntas 8\"150 cartón  Llave 24, (27) y 32   (Es una reducción)"
+    },
+    {
+      "id": "te-1056-b",
+      "name": "TE-1056-B",
+      "general": false,
+      "instructions": "Primera Plataforma frente a taller de PBD\n\nDe izquierda a derecha es el primer intercambiador\n\n2 DD/CC de 6\"150 Lado carcasa   Llave 32\n\nCabezales Llave 32\n\n2 Bridas distribuidora 8\"150 Llave 32\n\nLa tornillería de la flotante es Llave 32 y el cancamo para sacarlo con la grua M-20\n\nHace falta grua para los cabezales y flotante\n\nHace falta andamio para llegar a 1 DD/CC lado carcasa y para los cabezales y bridas distribuidora\n\nAl sacar la distribuidora hay que colocar 2 BB/CC 8\"150\n\nPara la PP/HH (tanto lado carcasa como lado proceso) se puede elegir hacer la prueba o bien montando acoples roscados de 3/4 NPT (Tanto el llenado como el venteo) o por las bridas de 1 1/2\"300 (Tanto el llenado como el venteo)\n\nPP/HH lado tubos 7,50Kg, Lado carcasa 12Kg\n\nLas juntas metaloplasticas se montan con camprofile de 10 o 12mm por las 2 caras\n\nSi se desmonta el haz tubular hay que pedir permiso para desmontar barandilla\n\nEn este no van los aros de prueba rojos que hay en la planta inferior\n\nHay un Aro (el aro es nuevo, no lo hemos probado, el que mira a taller) para poder hacer pp/hh lado carcasa y ver si hay fugas desde un lado (el otro tiene que estar montado con flotante y cabezal por falta de ese aro)"
+    },
+    {
+      "id": "te-2056",
+      "name": "TE-2056",
+      "general": false,
+      "instructions": "Primera Plataforma frente a taller de PBD\n\nDe izquierda a derecha es el tercer intercambiador\n\n2 DD/CC de 6\"150 Lado carcasa   Llave 32\n\nCabezales Llave 32\n\n2 Bridas distribuidora 6\"150 Llave 32\n\nLa tornillería de la flotante es Llave 32 y el cancamo para sacarlo con la grua M-22\n\nHace falta grua para los cabezales y flotante\n\nHace falta andamio para llegar a los 2 DD/CC lado carcasa y para los cabezales y brida distribuidora\n\nAl sacar la distribuidora hay que colocar 2 BB/CC 6\"150\n\nPara la PP/HH (tanto lado carcasa como lado proceso) se puede elegir hacer la prueba o bien montando acoples roscados de 3/4 NPT (Tanto el llenado como el venteo) o por las bridas de 1 1/2\"300 (Tanto el llenado como el venteo)\n\nPP/HH lado tubos 7,12Kg, lado carcasa 10,50Kg\n\nSe monta Goretex en los aros de prueba para hacer las PP/HH, la empaquetadura del aro es de 10mm\n\nLas juntas metaloplasticas se montan con camprofile de 10 o 12mm por las 2 caras\n\nSi se desmonta el haz tubular hay que pedir permiso para desmontar barandilla\n\nEn este si van los aros de prueba (los de color rojo espirrados a la pared del piso inferior)"
+    }
+  ]
+}
+</script>
+<script id="trabajos-varios-json" type="application/json">
+{
+  "Abril": [
+    {
+      "id": "distribucion-diaria-205-5002-030-28-04-28-igm-rev5-xlsm",
+      "date_iso": null,
+      "date_label": "Distribucion diaria 205-5002-030_28-04-28-IGM_rev5.xlsm",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4267491,
+          "op": 10,
+          "equipo": "LPOL032",
+          "descripcion": "Desmontar inyectora billion",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4306318,
+          "op": 10,
+          "equipo": "LIC-10619",
+          "descripcion": "Fabricar y recolocar tramex detrás CV-10619",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 3
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VENTURA GONZALEZ, ALBERTO",
+              "horas": 8
+            },
+            {
+              "nombre": "CANO OLMEDO, JUAN CARLOS",
+              "horas": 8
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4307672,
+          "op": 70,
+          "equipo": "TE-2056",
+          "descripcion": "Montar cabezales y aros de prueba para limpieza quimica",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4305773,
+          "op": 70,
+          "equipo": "TE-1056B",
+          "descripcion": "Montar cabezales y aros de prueba para limpieza quimica",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4310047,
+          "op": 10,
+          "equipo": "D-1106",
+          "descripcion": "Limpiar filtro CTZ",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4310045,
+          "op": 30,
+          "equipo": "F-1305B",
+          "descripcion": "Abrir, cambiar cartuchos y remontar",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4310049,
+          "op": 20,
+          "equipo": "C-1301B",
+          "descripcion": "Abrir, limpiar y remontar filtro F-1309",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4310053,
+          "op": 10,
+          "equipo": "F-901A",
+          "descripcion": "Cambiar filtro aspiracion",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4309743,
+          "op": 10,
+          "equipo": "C-902B",
+          "descripcion": "Limpiar filtro aspiracion",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "C",
+          "ot": 4279213,
+          "op": 40,
+          "equipo": "TCV-47616",
+          "descripcion": "Des/montar TCV y llevar a taller",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4308486,
+          "op": 10,
+          "equipo": "JZ-2009",
+          "descripcion": "Reparar pletina picaporte",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 5
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 5
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4305773,
+          "op": 140,
+          "equipo": "TE-1056B",
+          "descripcion": "Realizar PP/HH lado tubos",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 3
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-08-04-26-igm-rev5-xlsm",
+      "date_iso": "2026-04-08",
+      "date_label": "08/04/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4285205,
+          "op": 10,
+          "equipo": "PTA-T3-B",
+          "descripcion": "Soldar pletina suelta",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - COM",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "A",
+          "ot": 4296295,
+          "op": 20,
+          "equipo": "EX6100",
+          "descripcion": "C/S para soldar pletina refuerzo puerta corredera",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "PRED",
+          "prioridad": "B",
+          "ot": 4261673,
+          "op": 230,
+          "equipo": "PH-1700A",
+          "descripcion": "C/S carrete impulsion",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4304087,
+          "op": 10,
+          "equipo": "PP3",
+          "descripcion": "Reponer tramo tramex junto escalera acceso sub. 416-01",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4305950,
+          "op": 20,
+          "equipo": "F-1821",
+          "descripcion": "Des/montar y cambiar cartucho",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "DLIEM EL BARHDADI, SOUFIANE",
+              "horas": 4
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4305948,
+          "op": 20,
+          "equipo": "F-1822",
+          "descripcion": "Des/montar y cambiar cartucho",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "DLIEM EL BARHDADI, SOUFIANE",
+              "horas": 4
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4289975,
+          "op": 60,
+          "equipo": "PBD",
+          "descripcion": "Reparar puerta taller inst-ele PBD",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4307033,
+          "op": 10,
+          "equipo": "E-505",
+          "descripcion": "Des/montar y limpiar filtro CW",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4306147,
+          "op": 10,
+          "equipo": "TT/MM",
+          "descripcion": "Separar y corregir fuga linea 260-TN-1185-NA",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4300879,
+          "op": 10,
+          "equipo": "512-8C1",
+          "descripcion": "Cambiar manguera sulfurico",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303772,
+          "op": 10,
+          "equipo": "PC2038C",
+          "descripcion": "Limpiar filtro asp.",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-21-04-26-igm-rev5-xlsm",
+      "date_iso": "2026-04-21",
+      "date_label": "21/04/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - COM",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "A",
+          "ot": 4296295,
+          "op": 20,
+          "equipo": "EX6100",
+          "descripcion": "C/S para soldar pletina refuerzo puerta corredera",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4306324,
+          "op": 20,
+          "equipo": "PP2",
+          "descripcion": "TRABAJOS DE C/S PARA REPARAR BARRERA",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4267491,
+          "op": 10,
+          "equipo": "LPOL032",
+          "descripcion": "Desmontar inyectora billion",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4306318,
+          "op": 10,
+          "equipo": "LIC-10619",
+          "descripcion": "Fabricar y recolocar tramex detrás CV-10619",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4308529,
+          "op": 20,
+          "equipo": "C-1301B",
+          "descripcion": "Abrir, limpiar filtro y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 5
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 5
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 5
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VENTURA GONZALEZ, ALBERTO",
+              "horas": 2
+            },
+            {
+              "nombre": "CANO OLMEDO, JUAN CARLOS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 150,
+          "equipo": "S-1102",
+          "descripcion": "C/S para soldar pletinas cepillo pp3",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "VENTURA GONZALEZ, ALBERTO",
+              "horas": 6
+            },
+            {
+              "nombre": "CANO OLMEDO, JUAN CARLOS",
+              "horas": 6
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4307672,
+          "op": 70,
+          "equipo": "TE-2056",
+          "descripcion": "Montar cabezales y aros de prueba para limpieza quimica   -Grua",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4305773,
+          "op": 70,
+          "equipo": "TE-1056B",
+          "descripcion": "Montar cabezales y aros de prueba para limpieza quimica   -Grua",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 6
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 6
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 6
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "AUXI",
+          "prioridad": "C",
+          "ot": 4291965,
+          "op": 510,
+          "equipo": "T-1302",
+          "descripcion": "C/S para adecuar bandeja de cables y barandilla",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 5
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 5
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4306309,
+          "op": 10,
+          "equipo": "GC-1035B",
+          "descripcion": "Reparar tramex y colocar rodapies según fotos",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 3
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 3
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4308529,
+          "op": 20,
+          "equipo": "C-1301B",
+          "descripcion": "Abrir, limpiar filtro y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4307673,
+          "op": 70,
+          "equipo": "TE-1056B",
+          "descripcion": "Montar cabezales y aros de prueba para limpieza quimica   -Grua",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "AUXI",
+          "prioridad": "C",
+          "ot": 4291965,
+          "op": 510,
+          "equipo": "T-1302",
+          "descripcion": "C/S para adecuar bandeja de cables y barandilla",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    }
+  ],
+  "Julio": [
+    {
+      "id": "distribucion-diaria-205-5002-030-02-07-26-igm-rev5-xlsm",
+      "date_iso": "2026-07-02",
+      "date_label": "02/07/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 40,
+          "equipo": "GX-3005",
+          "descripcion": "C/S MONTAR REJILLAS CEPILLOS PP2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "CASTELLS MARGARIT, JORDI",
+              "horas": 8
+            },
+            {
+              "nombre": "GOMEZ VILLAJOS, JUAN",
+              "horas": 8
+            },
+            {
+              "nombre": "AYBAR SANCHEZ, EDDY",
+              "horas": 8
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4307598,
+          "op": 10,
+          "equipo": "PP3",
+          "descripcion": "Colocar chapas identificativas en mangueras",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 1
+            },
+            {
+              "nombre": "FIGUEROA ROJAS, ARUS",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4318006,
+          "op": 10,
+          "equipo": "H-733",
+          "descripcion": "CAMBIAR HIDRANTE",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "\"0\"",
+          "ot": 4322333,
+          "op": 20,
+          "equipo": "U-1",
+          "descripcion": "CAMBIAR JUNTA PARA CORREGIR FUGA LINEA 180-TN-1102",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4317935,
+          "op": 10,
+          "equipo": "HMC-831",
+          "descripcion": "Cambiar val. 70mm",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FIGUEROA ROJAS, ARUS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4316421,
+          "op": 10,
+          "equipo": "HMC-840",
+          "descripcion": "Sustituir val. Toma camion 4\"",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FIGUEROA ROJAS, ARUS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4321080,
+          "op": 10,
+          "equipo": "F-308A",
+          "descripcion": "Cambiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 5
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 5
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4321594,
+          "op": 10,
+          "equipo": "D-1901C",
+          "descripcion": "Des/montar venteo silo para su limpieza",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "ZAMORA FERNANDEZ, FRANCISCO JAVIER",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4321593,
+          "op": 10,
+          "equipo": "D-1901A",
+          "descripcion": "Des/montar venteo silo para su limpieza",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "ZAMORA FERNANDEZ, FRANCISCO JAVIER",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4290287,
+          "op": 40,
+          "equipo": "Taller",
+          "descripcion": "Construir bancada cuadro obra",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 5
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 5
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "\"0\"",
+          "ot": 4322746,
+          "op": 10,
+          "equipo": "EX1801A",
+          "descripcion": "Eliminar fuga agua zona 4",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "FIGUEROA ROJAS, ARUS",
+              "horas": 3
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "C",
+          "ot": 4322070,
+          "op": 30,
+          "equipo": "PBD",
+          "descripcion": "Soldar patin y valona rota linea TN-180-1105-NA",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 3
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "C",
+          "ot": 4322070,
+          "op": 20,
+          "equipo": "PBD",
+          "descripcion": "Des/montar codo linea TN-180-1105-NA",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    }
+  ],
+  "Marzo": [
+    {
+      "id": "distribucion-diaria-205-5002-030-05-03-26-igm-rev5-xlsm",
+      "date_iso": "2026-03-05",
+      "date_label": "05/03/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - COM",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4295340,
+          "op": 20,
+          "equipo": "COM",
+          "descripcion": "Colocar dd/cc en el LB de CPT según P&ID y fotos",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216318,
+          "op": 20,
+          "equipo": "PSV-1872B",
+          "descripcion": "Des/montar PSV",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4217837,
+          "op": 20,
+          "equipo": "PSV-1902A",
+          "descripcion": "Des/montar PSV",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4298077,
+          "op": 10,
+          "equipo": "Zona contratistas",
+          "descripcion": "Cambiare valvula H-755",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216228,
+          "op": 20,
+          "equipo": "PSV-1532",
+          "descripcion": "Des/montar PSV",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "C",
+          "ot": 4231770,
+          "op": 100,
+          "equipo": "FC-112",
+          "descripcion": "Montar ISO",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 8
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 8
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": "El ISO fabricado esta bien pero el caudalimetro proporcionado por instrumentacion no coincide. Habra que continuar en un futuro con este trabajo"
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4188419,
+          "op": 10,
+          "equipo": "A-822",
+          "descripcion": "Sustituir bisagras armario seguridad",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4300339,
+          "op": 10,
+          "equipo": "C-1301B",
+          "descripcion": "Cambiar tramex pasarela int. Compresor",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "CASTAÑARES FERRERO, RAUL",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4300813,
+          "op": 10,
+          "equipo": "D-115",
+          "descripcion": "Limpiar filtro CTZ",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4295377,
+          "op": 80,
+          "equipo": "E-1205",
+          "descripcion": "Sustituir val. Y lavaojos ducha frente E-1205",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 3
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216240,
+          "op": 20,
+          "equipo": "PSV-1912A",
+          "descripcion": "Des/montar PSV",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 3
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4296834,
+          "op": 10,
+          "equipo": "Sala Control",
+          "descripcion": "Ajustar puerta sala control a Rack PBD",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "CASTAÑARES FERRERO, RAUL",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-11-03-26-igm-rev5-xlsm",
+      "date_iso": "2026-03-11",
+      "date_label": "11/03/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4217838,
+          "op": 20,
+          "equipo": "PSV-1902B",
+          "descripcion": "Des/montar PSV",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "DLIEM EL BARHDADI, SOUFIANE",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216240,
+          "op": 20,
+          "equipo": "PSV-1912A",
+          "descripcion": "Des/montar PSV",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "DLIEM EL BARHDADI, SOUFIANE",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4299142,
+          "op": 40,
+          "equipo": "PP2",
+          "descripcion": "C/S para reparar fuga linea vapor 1\"LS05017",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "C",
+          "ot": 4231770,
+          "op": 100,
+          "equipo": "FC-112",
+          "descripcion": "Montar ISO",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "HIDALGO GARRE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PRED",
+          "prioridad": "B",
+          "ot": 4115845,
+          "op": 80,
+          "equipo": "P-1109",
+          "descripcion": "Tomar medidas y prefabricar ISO adjunto",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            },
+            {
+              "nombre": "CASTAÑARES FERRERO, RAUL",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4300273,
+          "op": 20,
+          "equipo": "PA-3001S",
+          "descripcion": "Girar reductor",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "DLIEM EL BARHDADI, SOUFIANE",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216241,
+          "op": 20,
+          "equipo": "PSV-1912B",
+          "descripcion": "Des/montar PSV",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "DLIEM EL BARHDADI, SOUFIANE",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4301303,
+          "op": 20,
+          "equipo": "F-1305B",
+          "descripcion": "Endiscar equipo según procedimiento",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "HIDALGO GARRE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-19-03-26-igm-rev5-xlsm",
+      "date_iso": "2026-03-19",
+      "date_label": "19/03/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216241,
+          "op": 20,
+          "equipo": "PSV-1912B",
+          "descripcion": "Des/montar PSV",
+          "estado": "",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - COM",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4295340,
+          "op": 20,
+          "equipo": "COM",
+          "descripcion": "Colocar dd/cc en el LB de CPT según P&ID y fotos",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4302680,
+          "op": 10,
+          "equipo": "TSV-206",
+          "descripcion": "Des/montar PSV",
+          "estado": "",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PRED",
+          "prioridad": "B",
+          "ot": 4303488,
+          "op": 90,
+          "equipo": "PP2",
+          "descripcion": "Tomar medidas y prefabricar linea PPR-300-LS-5017-B1",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 4
+            },
+            {
+              "nombre": "MANSILLA PIZARRO, SERGIO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4285205,
+          "op": 10,
+          "equipo": "PTA-T3-B",
+          "descripcion": "Soldar pletina suelta",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4299411,
+          "op": 10,
+          "equipo": "QE-1057",
+          "descripcion": "Sustituir abrazadera rechazo salida secador",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "MANSILLA PIZARRO, SERGIO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4297131,
+          "op": 20,
+          "equipo": "F-1302",
+          "descripcion": "Endiscar equipo",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": "Pasan el trabajo para la proxima semana"
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4297131,
+          "op": 30,
+          "equipo": "F-1302",
+          "descripcion": "Abrir, cambiar cartuchos y cerrar",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": "Pasan el trabajo para la proxima semana"
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4297131,
+          "op": 40,
+          "equipo": "F-1302",
+          "descripcion": "Desendiscar equipo",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": "Pasan el trabajo para la proxima semana"
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303421,
+          "op": 10,
+          "equipo": "PC-1038A",
+          "descripcion": "Des/montar y limpiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303508,
+          "op": 10,
+          "equipo": "PC-2038A",
+          "descripcion": "Des/montar y limpiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303421,
+          "op": 10,
+          "equipo": "PC-1038A",
+          "descripcion": "Des/montar y limpiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303508,
+          "op": 10,
+          "equipo": "PC-2038A",
+          "descripcion": "Des/montar y limpiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4299411,
+          "op": 10,
+          "equipo": "QE-1057",
+          "descripcion": "Sustituir abrazadera rechazo salida secador",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PRED",
+          "prioridad": "B",
+          "ot": 4303488,
+          "op": 90,
+          "equipo": "PP2",
+          "descripcion": "Tomar medidas y prefabricar linea PPR-300-LS-5017-B1",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-27-03-26-igm-rev5-xlsm",
+      "date_iso": "2026-03-27",
+      "date_label": "27/03/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4285205,
+          "op": 10,
+          "equipo": "PTA-T3-B",
+          "descripcion": "Soldar pletina suelta",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216208,
+          "op": 20,
+          "equipo": "PSV-1725",
+          "descripcion": "Des/montar PSV",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            },
+            {
+              "nombre": "GRAN BADIA, ALEXANDRE",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - COM",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "A",
+          "ot": 4296295,
+          "op": 20,
+          "equipo": "EX6100",
+          "descripcion": "C/S para soldar pletina refuerzo puerta corredera",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4305105,
+          "op": 10,
+          "equipo": "E-1303",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4305107,
+          "op": 10,
+          "equipo": "P-1501A",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4305108,
+          "op": 10,
+          "equipo": "P-1501B",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 2
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4305131,
+          "op": 10,
+          "equipo": "F-1908",
+          "descripcion": "Abrir linea, desobstruir descarga según operación y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 6
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 6
+            },
+            {
+              "nombre": "GRAN BADIA, ALEXANDRE",
+              "horas": 6
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4305105,
+          "op": 40,
+          "equipo": "E-1303",
+          "descripcion": "Fabricar rejillas según indicaciones",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "CANO OLMEDO, JUAN CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4290479,
+          "op": 20,
+          "equipo": "EXTRUSION",
+          "descripcion": "Fabricar rejillas según indicaciones",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "CANO OLMEDO, JUAN CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    }
+  ],
+  "Mayo": [
+    {
+      "id": "distribucion-diaria-205-5002-030-08-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-08",
+      "date_label": "08/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4282340,
+          "op": 30,
+          "equipo": "PBD",
+          "descripcion": "Reparar proteccion en taller",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4217722,
+          "op": 20,
+          "equipo": "PSV-1421",
+          "descripcion": "Des/montar PSV",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIDAL CABRE, JORDI",
+              "horas": null
+            },
+            {
+              "nombre": "FERNANDEZ FALLAD, DUANNE ORESTES",
+              "horas": null
+            },
+            {
+              "nombre": "GRILLO, JASON ANTHONY",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4216417,
+          "op": 20,
+          "equipo": "PSV-1424",
+          "descripcion": "Des/montar PSV",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIDAL CABRE, JORDI",
+              "horas": null
+            },
+            {
+              "nombre": "FERNANDEZ FALLAD, DUANNE ORESTES",
+              "horas": null
+            },
+            {
+              "nombre": "GRILLO, JASON ANTHONY",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4254615,
+          "op": 60,
+          "equipo": "PD-809",
+          "descripcion": "Des/montar tramo vertical",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 8
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "A",
+          "ot": 4312468,
+          "op": 10,
+          "equipo": "F-1817",
+          "descripcion": "Cambiar cartucho",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4312190,
+          "op": 20,
+          "equipo": "C-1301B",
+          "descripcion": "Abrir, limpiar filtro F-1309 y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "HIDALGO GARRE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "VIDAL CABRE, JORDI",
+              "horas": 4
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 140,
+          "equipo": "R-1402",
+          "descripcion": "Abrir BB/HH y des/montar ventilador",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 100,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar LT´s",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "HIDALGO GARRE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 130,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar Z-1406, fondo fast-loop y montar DD/CC 24\"",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 80,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar linea descarga comun R-1402",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "VIDAL CABRE, JORDI",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4254615,
+          "op": 60,
+          "equipo": "PD-809",
+          "descripcion": "Des/montar tramo vertical",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARRIDO GARCIA, ROBERTO",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 125,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar FV, carrete, nicolini, los 3 carretes y val. Bola",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GRILLO, JASON ANTHONY",
+              "horas": null
+            },
+            {
+              "nombre": "PEREZ LOPEZ, CHRISTIAN",
+              "horas": null
+            },
+            {
+              "nombre": "FIGUEROA ROJAS, ARUS",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "A",
+          "ot": 4312468,
+          "op": 10,
+          "equipo": "F-1817",
+          "descripcion": "Cambiar cartucho",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4312190,
+          "op": 20,
+          "equipo": "C-1301B",
+          "descripcion": "Abrir, limpiar filtro F-1309 y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 140,
+          "equipo": "R-1402",
+          "descripcion": "Abrir BB/HH y des/montar ventilador",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 100,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar LT´s",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 130,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar Z-1406, fondo fast-loop y montar DD/CC 24\"",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 80,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar linea descarga comun R-1402",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-11-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-11",
+      "date_label": "11/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4282340,
+          "op": 30,
+          "equipo": "PBD",
+          "descripcion": "Reparar proteccion en taller",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 125,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar FV, carrete, nicolini, los 3 carretes y val. Bola",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4312153,
+          "op": 10,
+          "equipo": "612-11602",
+          "descripcion": "Desmontar manguera",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4307883,
+          "op": 10,
+          "equipo": "612-11S01",
+          "descripcion": "Desmontar manguera",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "AYBAR SANCHEZ, EDDY",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": "Lo pasan para mañana"
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4309758,
+          "op": 10,
+          "equipo": "612-11601",
+          "descripcion": "Desmontar manguera",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4290642,
+          "op": 10,
+          "equipo": "D-1312",
+          "descripcion": "Desmontar nivel LG1353, limpiar tubuladuras y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            }
+          ],
+          "incidencias": "Lo pasan para mañana"
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4281542,
+          "op": 20,
+          "equipo": "Comedor",
+          "descripcion": "Construir soporte",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4312661,
+          "op": 10,
+          "equipo": "E-1411",
+          "descripcion": "Abrir, limpiar filtro y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "AYBAR SANCHEZ, EDDY",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4178136,
+          "op": 10,
+          "equipo": "R-1402",
+          "descripcion": "Revisar V/R PR0400",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-12-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-12",
+      "date_label": "12/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4312153,
+          "op": 10,
+          "equipo": "612-11602",
+          "descripcion": "Desmontar manguera",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "AYBAR SANCHEZ, EDDY",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4309758,
+          "op": 10,
+          "equipo": "612-11601",
+          "descripcion": "Desmontar manguera",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "AYBAR SANCHEZ, EDDY",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 210,
+          "equipo": "R-1402",
+          "descripcion": "Des/montar registros interiores",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4311386,
+          "op": 30,
+          "equipo": "Z-1001A",
+          "descripcion": "Soldar rascador",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4313286,
+          "op": 10,
+          "equipo": "FZ-1040",
+          "descripcion": "Cambiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4312153,
+          "op": 10,
+          "equipo": "612-11602",
+          "descripcion": "Desmontar manguera",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4309758,
+          "op": 10,
+          "equipo": "612-11601",
+          "descripcion": "Desmontar manguera",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 210,
+          "equipo": "R-1402",
+          "descripcion": "Des/montar registros interiores",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4311386,
+          "op": 30,
+          "equipo": "Z-1001A",
+          "descripcion": "Soldar rascador",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4313286,
+          "op": 10,
+          "equipo": "FZ-1040",
+          "descripcion": "Cambiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 450,
+          "equipo": "R-1402",
+          "descripcion": "Remontar lineas y fast-loopa excepcion de carretes de descarga",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": null
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 450,
+          "equipo": "R-1402",
+          "descripcion": "Remontar lineas y fast-loopa excepcion de carretes de descarga",
+          "estado": "",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "ZAMORA FERNANDEZ, FRANCISCO JAVIER",
+              "horas": null
+            },
+            {
+              "nombre": "VIDAL CABRE, JORDI",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-14-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-14",
+      "date_label": "14/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VENTURA GONZALEZ, ALBERTO",
+              "horas": 8
+            },
+            {
+              "nombre": "FILELLA MORAN, LUIS",
+              "horas": 8
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4311386,
+          "op": 30,
+          "equipo": "Z-1001A",
+          "descripcion": "Soldar rascador",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 3
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 470,
+          "equipo": "R-1402",
+          "descripcion": "Montar LT´s y retirar disco 24\"",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 500,
+          "equipo": "R-1402",
+          "descripcion": "Montar FV-13102, carretes, manual,nicolini, codos y val. bola",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 340,
+          "equipo": "R-1402",
+          "descripcion": "Cerrar BB/HH y des/montar ventilador",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": null
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": null
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 310,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar DD/CC aislamiento",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 430,
+          "equipo": "R-1402",
+          "descripcion": "C/S para sustituir tornilleria interior registros",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 3
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 3
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 210,
+          "equipo": "R-1402",
+          "descripcion": "Des/montar registros interiores",
+          "estado": "T",
+          "estado_ot": "CONT",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 2
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 2
+            },
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4103634,
+          "op": 20,
+          "equipo": "D-1915A",
+          "descripcion": "Sustituir mangon",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 3
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4313371,
+          "op": 10,
+          "equipo": "F-1308A",
+          "descripcion": "Des/montar para limpiar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4313370,
+          "op": 10,
+          "equipo": "E-1502",
+          "descripcion": "Des/montar y limpiar intercambiador",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 5
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 5
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4313582,
+          "op": 10,
+          "equipo": "P-1303",
+          "descripcion": "Abrir, limpiar filtro y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 470,
+          "equipo": "R-1402",
+          "descripcion": "Montar LT´s y retirar disco 24\"",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 340,
+          "equipo": "R-1402",
+          "descripcion": "Cerrar BB/HH y des/montar ventilador",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": null
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-19-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-19",
+      "date_label": "19/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4309757,
+          "op": 10,
+          "equipo": "612-11603",
+          "descripcion": "Desmontar manguera critica",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314175,
+          "op": 10,
+          "equipo": "P-1301B",
+          "descripcion": "Sustituir val. Bola",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314433,
+          "op": 10,
+          "equipo": "S-804",
+          "descripcion": "Cambiar mangon",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 3
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4167452,
+          "op": 10,
+          "equipo": "JZ-3036B",
+          "descripcion": "Soldar soportes en linea entrada al silo 8",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314316,
+          "op": 10,
+          "equipo": "P-1303B",
+          "descripcion": "Abrir, limpioar filtro y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4314323,
+          "op": 10,
+          "equipo": "E-505",
+          "descripcion": "Limpiar filtro CW",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 3
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 3
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4313672,
+          "op": 10,
+          "equipo": "PP2",
+          "descripcion": "Des/montar y cambiar manga",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 310,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar DD/CC aislamiento",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 4
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 310,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar DD/CC aislamiento",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "CARMONA VELEZ, ANDRUS LAYNER",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "AUX",
+          "clase": "SERV",
+          "prioridad": "B",
+          "ot": 4294748,
+          "op": 310,
+          "equipo": "R-1402",
+          "descripcion": "Desmontar DD/CC aislamiento",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PAIBA PEREZ, MARC",
+              "horas": 8
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314175,
+          "op": 10,
+          "equipo": "P-1301B",
+          "descripcion": "Sustituir val. Bola",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "SANCHEZ FERNANDEZ, JOSE MANUEL",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-20-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-20",
+      "date_label": "20/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "MODI",
+          "prioridad": "B",
+          "ot": 4225716,
+          "op": 140,
+          "equipo": "GX-3005",
+          "descripcion": "C/S para soldar pletinas cepillo pp2",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4309757,
+          "op": 10,
+          "equipo": "612-11603",
+          "descripcion": "Desmontar manguera critica",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4313672,
+          "op": 10,
+          "equipo": "PP2",
+          "descripcion": "Des/montar y cambiar manga",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4218472,
+          "op": 30,
+          "equipo": "F-1902A",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 4
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4218471,
+          "op": 30,
+          "equipo": "F-1809A",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "FABRA MAZUELA, CARLOS",
+              "horas": 4
+            },
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 4
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4212702,
+          "op": 30,
+          "equipo": "F-1802A",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4212703,
+          "op": 30,
+          "equipo": "F-1802B",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 4
+            },
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4290930,
+          "op": 10,
+          "equipo": "SE-04",
+          "descripcion": "Fabricar soportes y C/S para reparar escalera de gato",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            },
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4218472,
+          "op": 30,
+          "equipo": "F-1902A",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            },
+            {
+              "nombre": "PAIBA PEREZ, MARC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4218471,
+          "op": 30,
+          "equipo": "F-1809A",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            },
+            {
+              "nombre": "PAIBA PEREZ, MARC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4212702,
+          "op": 30,
+          "equipo": "F-1802A",
+          "descripcion": "Abrir, sustituir filtros y cerrar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    },
+    {
+      "id": "distribucion-diaria-205-5002-030-21-05-26-igm-rev5-xlsm",
+      "date_iso": "2026-05-21",
+      "date_label": "21/05/2026",
+      "jefe_equipo": "GARCIA MOLINA, ISAAC",
+      "tasks": [
+        {
+          "ubicacion": "T3 - PP3",
+          "tipologia": "AUX",
+          "clase": "AUXI",
+          "prioridad": "B",
+          "ot": 4309757,
+          "op": 10,
+          "equipo": "612-11603",
+          "descripcion": "Desmontar manguera critica",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4313672,
+          "op": 10,
+          "equipo": "PP2",
+          "descripcion": "Des/montar y cambiar manga",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4189727,
+          "op": 10,
+          "equipo": "E-1209",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4189726,
+          "op": 10,
+          "equipo": "E-1208",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 2
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 2
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4209415,
+          "op": 30,
+          "equipo": "F-1507",
+          "descripcion": "Abrir, cambiar mangas y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 3
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 3
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 3
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314996,
+          "op": 10,
+          "equipo": "PH-1700A",
+          "descripcion": "Des/montar carrete aspiracion",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 4
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 4
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 4
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303777,
+          "op": 20,
+          "equipo": "PBD",
+          "descripcion": "Soldar soportes en pilares indicados en plano adjunto",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VIRGILI ABELLO, ANGEL",
+              "horas": 8
+            },
+            {
+              "nombre": "FERNANDEZ PONFERRADA, IVAN",
+              "horas": 8
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314996,
+          "op": 30,
+          "equipo": "PH-1700A",
+          "descripcion": "Cortar tornilleria carrete",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 2
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314996,
+          "op": 40,
+          "equipo": "PH-1700A",
+          "descripcion": "Des/montar tapa e internos val. Retencion",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "VICENTE RAMOS, ADRIAN",
+              "horas": 2
+            },
+            {
+              "nombre": "MORENO YESTE, DAVID",
+              "horas": 2
+            },
+            {
+              "nombre": "CONTRERAS PASTOR, FERNANDO",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD2",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "\"0\"",
+          "ot": 4314195,
+          "op": 70,
+          "equipo": "ICV-53183",
+          "descripcion": "Montar tapa y actuador ICV",
+          "estado": "C",
+          "estado_ot": "",
+          "operarios": [
+            {
+              "nombre": "RUIZ CHICA, FRANCISCO",
+              "horas": 1
+            },
+            {
+              "nombre": "PEREZ ROBLES, JOSUE",
+              "horas": 1
+            },
+            {
+              "nombre": "PARRA ARMENTA, MIGUEL ANGEL",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4189727,
+          "op": 10,
+          "equipo": "E-1209",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4189726,
+          "op": 10,
+          "equipo": "E-1208",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4209415,
+          "op": 30,
+          "equipo": "F-1507",
+          "descripcion": "Abrir, cambiar mangas y remontar",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314996,
+          "op": 10,
+          "equipo": "PH-1700A",
+          "descripcion": "Des/montar carrete aspiracion",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "B",
+          "ot": 4303777,
+          "op": 20,
+          "equipo": "PBD",
+          "descripcion": "Soldar soportes en pilares indicados en plano adjunto",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314996,
+          "op": 30,
+          "equipo": "PH-1700A",
+          "descripcion": "Cortar tornilleria carrete",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T1 - PBD1",
+          "tipologia": "ORD",
+          "clase": "CORR",
+          "prioridad": "A",
+          "ot": 4314996,
+          "op": 40,
+          "equipo": "PH-1700A",
+          "descripcion": "Des/montar tapa e internos val. Retencion",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "GARCIA MOLINA, ISAAC",
+              "horas": 1
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4189727,
+          "op": 10,
+          "equipo": "E-1209",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PAIBA PEREZ, MARC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        },
+        {
+          "ubicacion": "T3 - PP2",
+          "tipologia": "ORD",
+          "clase": "PAR",
+          "prioridad": "C",
+          "ot": 4189726,
+          "op": 10,
+          "equipo": "E-1208",
+          "descripcion": "Abrir, limpiar y remontar filtro",
+          "estado": "T",
+          "estado_ot": "FINA",
+          "operarios": [
+            {
+              "nombre": "PAIBA PEREZ, MARC",
+              "horas": 2
+            }
+          ],
+          "incidencias": ""
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+const DATA = JSON.parse(document.getElementById('data-json').textContent);
+const TRABAJOS_VARIOS = JSON.parse(document.getElementById('trabajos-varios-json').textContent);
+const MONTH_ORDER = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const TOTAL_JORNADAS = Object.values(TRABAJOS_VARIOS).reduce((s, arr) => s + arr.length, 0);
+
+const ZONES = [
+  {
+    key: "PP2",
+    title: "PP2",
+    desc: "Planta de proceso 2 — filtros, bombas e intercambiadores",
+    color: "#ff8a3d",
+    bg: "rgba(255,138,61,0.14)",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 22v-6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/></svg>`
+  },
+  {
+    key: "PP3",
+    title: "PP3",
+    desc: "Planta de proceso 3 — compresores y equipos rotativos",
+    color: "#4dabf7",
+    bg: "rgba(77,171,247,0.14)",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>`
+  },
+  {
+    key: "TrabajosVarios",
+    title: "Trabajos Varios",
+    desc: "Órdenes puntuales y distribución diaria de trabajos",
+    color: "#51cf66",
+    bg: "rgba(81,207,102,0.14)",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>`
+  },
+  {
+    key: "PBD",
+    title: "PBD",
+    desc: "Taller PBD — cables, transmisores e instrumentación",
+    color: "#b197fc",
+    bg: "rgba(177,151,252,0.14)",
+    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>`
+  }
+];
+
+const viewport = document.getElementById('viewport');
+const breadcrumbEl = document.getElementById('breadcrumb');
+const footerEl = document.querySelector('.app-footer');
+
+let state = { zone: null, month: null, search: "" };
+
+function zoneMeta(key){ return ZONES.find(z => z.key === key); }
+
+function iconChevronRight(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>`;
+}
+function iconSearch(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>`;
+}
+function iconArrowUpRight(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>`;
+}
+function iconLeft(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>`;
+}
+function iconBox(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg>`;
+}
+
+function renderBreadcrumb(){
+  let html = `<span class="crumb clickable" data-nav="home">Zonas</span>`;
+  if(state.zone){
+    const z = zoneMeta(state.zone);
+    if(state.zone === 'TrabajosVarios' && state.month){
+      html += `<span class="sep">/</span><span class="crumb clickable" data-nav="zone">${z.title}</span>`;
+      html += `<span class="sep">/</span><span class="crumb current">${state.month}</span>`;
+    } else {
+      html += `<span class="sep">/</span><span class="crumb current">${z.title}</span>`;
+    }
+  }
+  breadcrumbEl.innerHTML = html;
+  breadcrumbEl.querySelectorAll('[data-nav="home"]').forEach(el => el.addEventListener('click', goHome));
+  breadcrumbEl.querySelectorAll('[data-nav="zone"]').forEach(el => el.addEventListener('click', goToMonths));
+}
+
+function transitionTo(renderFn){
+  const current = viewport.firstElementChild;
+  if(current){
+    current.classList.add('view-exit');
+    setTimeout(() => {
+      viewport.innerHTML = '';
+      const el = renderFn();
+      el.classList.add('view-enter');
+      viewport.appendChild(el);
+    }, 260);
+  } else {
+    const el = renderFn();
+    el.classList.add('view-enter');
+    viewport.appendChild(el);
+  }
+}
+
+function goHome(){
+  state.zone = null;
+  state.month = null;
+  state.search = "";
+  renderBreadcrumb();
+  footerEl.textContent = "Selecciona una zona para ver sus equipos";
+  transitionTo(renderZones);
+}
+
+function openZone(key){
+  state.zone = key;
+  state.month = null;
+  state.search = "";
+  renderBreadcrumb();
+  const z = zoneMeta(key);
+  footerEl.textContent = z.desc;
+  if(key === 'TrabajosVarios'){
+    transitionTo(renderMonths);
+  } else {
+    transitionTo(() => renderEquipList(key));
+  }
+}
+
+function goToMonths(){
+  state.month = null;
+  renderBreadcrumb();
+  const z = zoneMeta('TrabajosVarios');
+  footerEl.textContent = z.desc;
+  transitionTo(renderMonths);
+}
+
+function openMonth(month){
+  state.month = month;
+  renderBreadcrumb();
+  footerEl.textContent = `${month} · Trabajos Varios`;
+  transitionTo(() => renderDayList(month));
+}
+
+function renderZones(){
+  const wrap = document.createElement('div');
+  wrap.className = 'view';
+  const grid = document.createElement('div');
+  grid.className = 'zone-grid';
+
+  ZONES.forEach(z => {
+    const isTrabajos = z.key === 'TrabajosVarios';
+    const count = isTrabajos ? TOTAL_JORNADAS : (DATA[z.key] || []).length;
+    const label = isTrabajos ? (count === 1 ? 'jornada' : 'jornadas') : (count === 1 ? 'equipo' : 'equipos');
+    const card = document.createElement('div');
+    card.className = 'zone-card';
+    card.style.setProperty('--zone-color', z.color);
+    card.style.setProperty('--zone-bg', z.bg);
+    card.style.setProperty('--zone-glow', z.bg);
+    card.innerHTML = `
+      <div class="zone-icon">${z.icon}</div>
+      <h2>${z.title}</h2>
+      <p>${z.desc}</p>
+      <div class="zone-count"><span class="dot"></span>${count} ${label}</div>
+      <div class="zone-arrow">${iconChevronRight()}</div>
+    `;
+    card.addEventListener('click', () => openZone(z.key));
+    grid.appendChild(card);
+  });
+
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function renderEquipList(key){
+  const z = zoneMeta(key);
+  const items = DATA[key] || [];
+
+  const wrap = document.createElement('div');
+  wrap.className = 'view';
+
+  const back = document.createElement('button');
+  back.className = 'back-btn';
+  back.innerHTML = `${iconLeft()} Volver a zonas`;
+  back.addEventListener('click', goHome);
+  wrap.appendChild(back);
+
+  const searchWrap = document.createElement('div');
+  searchWrap.className = 'search-wrap';
+  searchWrap.innerHTML = `${iconSearch()}<input type="text" placeholder="Buscar equipo, por ejemplo E-663..." id="searchInput">`;
+  wrap.appendChild(searchWrap);
+
+  const header = document.createElement('div');
+  header.className = 'list-header';
+  header.innerHTML = `<h2>${z.title} <span class="badge" id="countBadge">${items.length}</span></h2><span class="sub">${z.desc}</span>`;
+  wrap.appendChild(header);
+
+  const gridHolder = document.createElement('div');
+  wrap.appendChild(gridHolder);
+
+  function renderGrid(filter){
+    const filtered = items.filter(it => it.name.toLowerCase().includes(filter.toLowerCase()));
+    document.getElementById('countBadge') && (document.getElementById('countBadge').textContent = filtered.length);
+
+    if(items.length === 0){
+      gridHolder.innerHTML = '';
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.innerHTML = `
+        ${iconBox()}
+        <h3>Todavía no hay equipos cargados</h3>
+        <p>Esta zona (${z.title}) está lista para recibir instrucciones de trabajo. Añade archivos de equipo para verlos aquí.</p>`;
+      gridHolder.appendChild(empty);
+      return;
+    }
+
+    if(filtered.length === 0){
+      gridHolder.innerHTML = `<div class="empty-state">${iconBox()}<h3>Sin resultados</h3><p>No se encontró ningún equipo que coincida con "${filter}".</p></div>`;
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'equip-grid';
+    filtered.forEach((it, i) => {
+      const card = document.createElement('div');
+      card.className = 'equip-card' + (it.general ? ' general' : '');
+      card.style.animationDelay = (i * 0.03) + 's';
+      const preview = it.instructions.split('\n').find(l => l.trim().length > 0) || '';
+      card.innerHTML = `
+        <span class="tag">${it.general ? 'Nota general' : 'Equipo'}</span>
+        <h3>${it.name}</h3>
+        <p class="preview">${preview}</p>
+        <div class="go">Ver instrucciones ${iconArrowUpRight()}</div>
+      `;
+      card.addEventListener('click', () => openDetail(key, it));
+      grid.appendChild(card);
+    });
+    gridHolder.innerHTML = '';
+    gridHolder.appendChild(grid);
+  }
+
+  renderGrid('');
+  searchWrap.querySelector('#searchInput').addEventListener('input', (e) => {
+    renderGrid(e.target.value);
+  });
+
+  return wrap;
+}
+
+function iconCalendar(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>`;
+}
+function iconClock(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+}
+function iconUser(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg>`;
+}
+function escapeHtml(str){
+  return String(str == null ? '' : str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function formatDate(iso){
+  if(!iso) return null;
+  const d = new Date(iso + 'T00:00:00');
+  if(isNaN(d.getTime())) return null;
+  let s = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function formatDateShort(iso){
+  if(!iso) return null;
+  const d = new Date(iso + 'T00:00:00');
+  if(isNaN(d.getTime())) return null;
+  let s = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  return s;
+}
+
+function renderMonths(){
+  const wrap = document.createElement('div');
+  wrap.className = 'view';
+  const z = zoneMeta('TrabajosVarios');
+
+  const back = document.createElement('button');
+  back.className = 'back-btn';
+  back.innerHTML = `${iconLeft()} Volver a zonas`;
+  back.addEventListener('click', goHome);
+  wrap.appendChild(back);
+
+  const header = document.createElement('div');
+  header.className = 'list-header';
+  header.innerHTML = `<h2>${z.title}</h2><span class="sub">${z.desc}</span>`;
+  wrap.appendChild(header);
+
+  const months = MONTH_ORDER.filter(m => TRABAJOS_VARIOS[m] && TRABAJOS_VARIOS[m].length > 0);
+
+  if(months.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `${iconBox()}<h3>Sin jornadas cargadas</h3><p>Todavía no hay distribuciones diarias disponibles.</p>`;
+    wrap.appendChild(empty);
+    return wrap;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'zone-grid';
+  months.forEach((m, i) => {
+    const days = TRABAJOS_VARIOS[m];
+    const totalTasks = days.reduce((s, d) => s + d.tasks.length, 0);
+    const card = document.createElement('div');
+    card.className = 'zone-card';
+    card.style.setProperty('--zone-color', z.color);
+    card.style.setProperty('--zone-bg', z.bg);
+    card.style.setProperty('--zone-glow', z.bg);
+    card.style.animationDelay = (i * 0.06) + 's';
+    card.innerHTML = `
+      <div class="zone-icon">${iconCalendar()}</div>
+      <h2>${m}</h2>
+      <p>${days.length} ${days.length === 1 ? 'jornada registrada' : 'jornadas registradas'}</p>
+      <div class="zone-count"><span class="dot"></span>${totalTasks} trabajos</div>
+      <div class="zone-arrow">${iconChevronRight()}</div>
+    `;
+    card.addEventListener('click', () => openMonth(m));
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function renderDayList(month){
+  const days = TRABAJOS_VARIOS[month] || [];
+  const wrap = document.createElement('div');
+  wrap.className = 'view';
+
+  const back = document.createElement('button');
+  back.className = 'back-btn';
+  back.innerHTML = `${iconLeft()} Volver a meses`;
+  back.addEventListener('click', goToMonths);
+  wrap.appendChild(back);
+
+  const header = document.createElement('div');
+  header.className = 'list-header';
+  header.innerHTML = `<h2>${month} <span class="badge">${days.length}</span></h2><span class="sub">Jornadas con distribución de trabajos</span>`;
+  wrap.appendChild(header);
+
+  if(days.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `${iconBox()}<h3>Sin jornadas este mes</h3><p>No hay distribuciones diarias registradas para ${month}.</p>`;
+    wrap.appendChild(empty);
+    return wrap;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'equip-grid';
+  days.forEach((d, i) => {
+    const card = document.createElement('div');
+    card.className = 'equip-card';
+    card.style.animationDelay = (i * 0.03) + 's';
+    const dateFormatted = formatDateShort(d.date_iso) || d.date_label;
+    card.innerHTML = `
+      <span class="tag">${d.tasks.length} ${d.tasks.length === 1 ? 'trabajo' : 'trabajos'}</span>
+      <h3>${escapeHtml(dateFormatted)}</h3>
+      <p class="preview">Jefe de equipo: ${escapeHtml(d.jefe_equipo || '—')}</p>
+      <div class="go">Ver distribución ${iconArrowUpRight()}</div>
+    `;
+    card.addEventListener('click', () => openDayDetail(month, d));
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function priorityBadge(p){
+  const map = {
+    'A': { label: 'Prioridad A', cls: 'prio-a' },
+    'B': { label: 'Prioridad B', cls: 'prio-b' },
+    'C': { label: 'Prioridad C', cls: 'prio-c' },
+  };
+  const key = (p || '').replace(/"/g,'').trim();
+  const info = map[key] || { label: key ? `Prioridad ${key}` : '', cls: 'prio-n' };
+  if(!info.label) return '';
+  return `<span class="pill ${info.cls}">${escapeHtml(info.label)}</span>`;
+}
+function statusBadge(estado, estadoOt){
+  const e = (estado || '').trim();
+  const eot = (estadoOt || '').trim();
+  if(eot.toUpperCase() === 'FINA' || e.toUpperCase() === 'T'){
+    return `<span class="pill status-done">Finalizado</span>`;
+  }
+  if(e.toUpperCase() === 'C'){
+    return `<span class="pill status-progress">En curso</span>`;
+  }
+  if(!e && !eot) return '';
+  return `<span class="pill status-other">${escapeHtml(eot || e)}</span>`;
+}
+
+function taskCardHtml(t, i){
+  const opsHtml = (t.operarios || []).map(o => {
+    const horas = (o.horas !== null && o.horas !== undefined && o.horas !== '') ? ` · ${o.horas}h` : '';
+    return `<span class="op-chip">${iconUser()}${escapeHtml(o.nombre)}${horas}</span>`;
+  }).join('');
+
+  return `
+    <div class="task-card" style="animation-delay:${i * 0.05}s">
+      <div class="task-top">
+        <div class="task-loc">${escapeHtml(t.ubicacion || 'Ubicación no especificada')}</div>
+        <div class="task-badges">${priorityBadge(t.prioridad)}${statusBadge(t.estado, t.estado_ot)}</div>
+      </div>
+      <h4 class="task-equipo">${escapeHtml(t.equipo || '—')}</h4>
+      <p class="task-desc">${escapeHtml(t.descripcion || 'Sin descripción')}</p>
+      <div class="task-meta">
+        ${t.ot ? `<span>OT ${escapeHtml(t.ot)}${t.op ? ' / OP ' + escapeHtml(t.op) : ''}</span>` : ''}
+        ${t.tipologia ? `<span>${escapeHtml(t.tipologia)}${t.clase ? ' · ' + escapeHtml(t.clase) : ''}</span>` : ''}
+      </div>
+      ${opsHtml ? `<div class="op-list">${opsHtml}</div>` : ''}
+      ${t.incidencias ? `<div class="task-incident">⚠ ${escapeHtml(t.incidencias)}</div>` : ''}
+    </div>
+  `;
+}
+
+function openDayDetail(month, day){
+  const z = zoneMeta('TrabajosVarios');
+  detailZonePill.textContent = `Trabajos Varios · ${month}`;
+  detailZonePill.style.setProperty('--zone-color', z.color);
+  detailZonePill.style.setProperty('--zone-bg', z.bg);
+  detailTitle.textContent = formatDate(day.date_iso) || day.date_label;
+  document.getElementById('detailLabelText').textContent = 'Distribución de trabajos de la jornada';
+
+  const tasksHtml = (day.tasks || []).map((t, i) => taskCardHtml(t, i)).join('');
+  detailInstructions.innerHTML = `
+    <div class="day-meta">
+      <span>${iconUser()} Jefe de equipo: <b>${escapeHtml(day.jefe_equipo || '—')}</b></span>
+      <span>${iconClock()} ${day.tasks.length} ${day.tasks.length === 1 ? 'trabajo' : 'trabajos'}</span>
+    </div>
+    ${tasksHtml || `<p style="color:var(--text-2);">No hay trabajos registrados en esta jornada.</p>`}
+  `;
+
+  scrim.classList.add('open');
+  panel.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ---------- DETAIL PANEL ---------- */
+const scrim = document.getElementById('scrim');
+const panel = document.getElementById('detailPanel');
+const closeBtn = document.getElementById('closeBtn');
+const detailTitle = document.getElementById('detailTitle');
+const detailZonePill = document.getElementById('detailZonePill');
+const detailInstructions = document.getElementById('detailInstructions');
+
+function openDetail(zoneKey, item){
+  const z = zoneMeta(zoneKey);
+  detailZonePill.textContent = z.title;
+  detailZonePill.style.setProperty('--zone-color', z.color);
+  detailZonePill.style.setProperty('--zone-bg', z.bg);
+  detailTitle.textContent = item.name;
+  document.getElementById('detailLabelText').textContent = 'Instrucciones para realizar el trabajo';
+
+  const toolWords = /(llave|grifa|explosimetro|traje|andamio|grua|tapon|tapones)/i;
+  const lines = item.instructions.split('\n').filter(l => l.trim().length > 0);
+  detailInstructions.innerHTML = lines.map((line, i) => {
+    const isTool = toolWords.test(line);
+    const safe = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="line${isTool ? ' tool-line' : ''}" style="animation-delay:${i * 0.045}s">${safe}</div>`;
+  }).join('');
+
+  scrim.classList.add('open');
+  panel.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail(){
+  scrim.classList.remove('open');
+  panel.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+scrim.addEventListener('click', closeDetail);
+closeBtn.addEventListener('click', closeDetail);
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeDetail(); });
+
+/* ---------- INIT ---------- */
+renderBreadcrumb();
+viewport.appendChild(renderZones());
+</script>
+
+</body>
+</html>
