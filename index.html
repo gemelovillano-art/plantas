@@ -363,6 +363,24 @@
   .empty-state h3{ color:var(--text-1); margin:0 0 6px; font-size:16px; }
   .empty-state p{ margin:0; font-size:13.5px; max-width:360px; margin:0 auto; }
 
+  .login-gate{
+    text-align:center;
+    padding:100px 20px;
+    max-width:420px;
+    margin:0 auto;
+  }
+  .login-gate-icon{
+    width:56px; height:56px;
+    margin:0 auto 22px;
+    border-radius:16px;
+    background:var(--accent-soft);
+    color:var(--accent-2);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .login-gate-icon svg{ width:26px; height:26px; }
+  .login-gate h2{ font-size:20px; margin:0 0 10px; color:var(--text-0); }
+  .login-gate p{ font-size:14px; color:var(--text-1); line-height:1.6; margin:0; }
+
   /* ---------- BACK BUTTON ---------- */
   .back-btn{
     display:inline-flex;
@@ -451,20 +469,6 @@
   .auth-error{ color:#ff8787; font-size:12px; margin:0; min-height:14px; }
 
   /* ---------- ADMIN: banners, buttons, forms ---------- */
-  .migrate-banner{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:18px;
-    flex-wrap:wrap;
-    background:linear-gradient(135deg, rgba(255,138,61,0.14), rgba(255,138,61,0.04));
-    border:1px solid rgba(255,138,61,0.3);
-    border-radius:var(--radius-md);
-    padding:18px 22px;
-    margin-bottom:20px;
-  }
-  .migrate-banner strong{ font-size:14.5px; color:var(--text-0); }
-  .migrate-banner p{ margin:6px 0 0; font-size:13px; color:var(--text-1); max-width:520px; }
 
   .btn-primary{
     background:var(--accent);
@@ -775,346 +779,6 @@
   </div>
 </aside>
 
-<script id="data-json" type="application/json">
-{
-  "PP2": [
-    {
-      "id": "aaa-valvula-retencion-y-mangueras-teal-pp2",
-      "name": "Valvula retencion y mangueras TEAL pp2",
-      "general": true,
-      "instructions": "En la caseta del teal de pp2, requiere de un pequeño andamio. Cerca caseta operador\n\nLlevar traje aluminizado y explosimetro\n\n- La retención es de 1\"600 (Hembra/Hembra, certificada) 2 juntas aluminio 52x39.5x3mm  Llave 27 (110 Nm)\n\n- 2 mangueras con Bridas de 1/2\"600 (todas macho/macho) 4 juntas de aluminio 35x25x3mm  Llave 22 (50 Nm)"
-    },
-    {
-      "id": "c-1301b",
-      "name": "C-1301B",
-      "general": false,
-      "instructions": "Filtro de agua a ras de suelo del compresor, mirando hacia PP4\n\n6\"150 Llave 32"
-    },
-    {
-      "id": "c-1801c-filtro",
-      "name": "C-1801C (Filtro)",
-      "general": false,
-      "instructions": "Entre extrusor PP2 y planta, por detrás PP4. Una de las 3 soplantes\n\nHace falta andamio, uno frontal y (otro lateral mas alto que el otro) para poder coger bien el filtro (y el fuelle)\n\n3 Juntas de cartón 10\"150 Llave 30-32 es un chino dentro de un fuelle\n\nLlevar Llave 19 (o 2 inglesas) para apretar/aflojar las varillas del fuelle y sacar el filtro"
-    },
-    {
-      "id": "d-1106-filtro",
-      "name": "D-1106 (Filtro)",
-      "general": false,
-      "instructions": "Zona catalizadores   (Arriba)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
-    },
-    {
-      "id": "d-1113-filtro",
-      "name": "D-1113 (Filtro)",
-      "general": false,
-      "instructions": "Zona catalizadores    (Abajo)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
-    },
-    {
-      "id": "d-1115-filtro",
-      "name": "D-1115 (Filtro)",
-      "general": false,
-      "instructions": "Zona catalizadores    (Arriba)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
-    },
-    {
-      "id": "d-1116-filtro",
-      "name": "D-1116 (Filtro)",
-      "general": false,
-      "instructions": "Zona catalizadores    (Abajo)\n\nJunta de cartón cortada a mano (mas o menos 1 1/2\")\n\nLlave 17\n\nGuantes de nitrilo"
-    },
-    {
-      "id": "d-1502",
-      "name": "D-1502",
-      "general": false,
-      "instructions": "Empieza en la primera planta, al lado BB/HH R-1401\n\n\n1 Planta\n\n\nEn andamio desmontar carrete 10\"150 Llave 36 Juntas teflon (Tiene un picaje con una brida 2\"150 Llave 27 junta espiro que hay que desmontar) y colocar BB/CC en parte inferior a carrete\n\nEn andamio sacar otra linea (picaje) 2\"150 Llave 27 junta espiro\n\nEn andamio desmontar codo 16\"150 Llave 41 Juntas de teflon (Llevar puly 750Kg. con 1 estrobo de tamaño medio y 2 grilletes) Tiene un enganche para colocar el puly encima del codo. La BB/CC para el codo esta en el suelo\n\nEn andamio desmontar tapa con bisagra Llave 32 ¿8\"150? Lleva junta teflon\n\nColocar disco (de los finos) 4\"150 Llave 27 en val. mariposa (parte superior) Junta teflón (o cartón)\n\n\n2 Planta\n\n\nAbrir BB/HH 28\"150 Llave 50 junta Teflon\n\nAl lado ES-29 colocar disco 1/2\"150 Llave 22 Junta espiro\n\nAbrir 1 mirilla cristal Llave 22\n\nHay que abrir 2 registros en el interior (Los 2 únicos que no están soldados) Llave 12-13 y 14-15\n\n\n3 Planta\n\n\nSacar fuelle 8\"150 Llave 32 (Junta espiro) y colocar BB/CC en parte superior\n\nDesmontar 2 mirillas de cristal llave 22\n\nEn andamio colocar disco 16\"150 Llave 41 Junta espiro (Suele estar el disco en un lateral en el suelo) Hay que coger del codo donde va el disco a la viga que hay justo al lado de las escaleras con un trackel de 750 Kg y tirar para que entre el disco"
-    },
-    {
-      "id": "d-1903a-b-c-d-venteos",
-      "name": "D-1903A-B-C-D (Venteos)",
-      "general": false,
-      "instructions": "En los silos arriba de todo, los venteos que se desmontan y se limpia la rafia con una persona de obra civil\n\nLlave 36 abierta y cerrada (Llaves manuales no de golpeo)"
-    },
-    {
-      "id": "e-1208-filtro-agua",
-      "name": "E-1208 (Filtro agua)",
-      "general": false,
-      "instructions": "A ras de suelo en rack central pp2, intercambiador grande de placas\n\nJunta espiro de 16\"150 Llave 41"
-    },
-    {
-      "id": "e-1209-filtro-agua",
-      "name": "E-1209 (Filtro agua)",
-      "general": false,
-      "instructions": "A ras de suelo en rack central pp2, intercambiador grande de placas\n\nJunta espiro de 16\"150 Llave 41"
-    },
-    {
-      "id": "e-1303-filtro-agua",
-      "name": "E-1303 (Filtro agua)",
-      "general": false,
-      "instructions": "1 planta, junto barandilla\n\n4\"150 espiro    Llave 27"
-    },
-    {
-      "id": "e-1411-filtro-agua",
-      "name": "E-1411 (Filtro agua)",
-      "general": false,
-      "instructions": "A la entrada de planta cerca escaleras acceso R-1401\n\nTapa 12\"150     1 Junta espirometalica    Llave 36"
-    },
-    {
-      "id": "e-1412-filtros-cw-a-y-b",
-      "name": "E-1412 (Filtros CW A y B)",
-      "general": false,
-      "instructions": "Al lado escaleras accesos R-1401, zona nueva\n\nBrida 12\"150    junta espiro    Llave 36"
-    },
-    {
-      "id": "e-1502",
-      "name": "E-1502",
-      "general": false,
-      "instructions": "Rack central PP2 a ras de suelo\n\nIntercambiador de placas\n\nLlave y vaso 46\n\nLos espárragos están soldados de la cabeza para que salgan por el lado correcto"
-    },
-    {
-      "id": "f-1104-a",
-      "name": "F-1104-A",
-      "general": false,
-      "instructions": "A ras de suelo zona catalizadores\n\nTapa con junta custom de cartón (unas 3\")   Llave 17\n\nLa tapa va unida a 2 bridas de 1\"300 con junta espiro   Llave 27\n\nTanto la junta como el cartucho que lleva se sacan de almacen"
-    },
-    {
-      "id": "f-1104-b",
-      "name": "F-1104-B",
-      "general": false,
-      "instructions": "A ras de suelo zona catalizadores\n\nTapa con junta custom de cartón (unas 3\")   Llave 17\n\nLa tapa va unida a 2 bridas de 1\"300 con junta espiro   Llave 27\n\nTanto la junta como el cartucho que lleva se sacan de almacen"
-    },
-    {
-      "id": "f-1302",
-      "name": "F-1302",
-      "general": false,
-      "instructions": "Filtro guarda arriba de todo. debajo filtro mangas\n\nSubir cajas filtros con grúa (4 cajas) 56 cartuchos\n\nUsar Big bags para subir y bajar materiales (con grúa)\n\nUna pareja de obra civil para limpiar y colocar plásticos\n\nTraje aluminio, contiene TEAL. Llevar cordil para abrir filtro\n\n2 Discos en 8 de 1\"300   juntas espiro   Llave 27\n\n3 DD/CC de 1 1/2\"300  Juntas espiro   Llave 32\n\n2 DD/CC (finos) 10\"150   Llave 36   (Un disco lleva juntas de cartón y el otro espiro)    \n\nJunta tapa de cartón \"custom\" Llave 27\n\nVarillas interiores Llave 17\n\nLlevar pinza hidráulica para los DD/CC\n\nLos DD/CC se encuentran en la zona (Sino se los han llevado)"
-    },
-    {
-      "id": "f-1302b",
-      "name": "F-1302B",
-      "general": false,
-      "instructions": "Casi arriba de todo, encima R-1402\n\n2 DD/CC 1 1/2\" 300   Llave 32\n\n2 DD/CC 10\" 150   Llave 36\n\nTapa llave 46\n\nVarillas dentro equipo llave 30\n\nSubir cajas filtros con grua (2 cajas) 2 filtros\n\nUna pareja de obra civil para limpiar y colocar plásticos\n\nUsar Big bags para subir y bajar materiales si es posible (con grúa)\n\nTraje aluminio, contiene TEAL. Llevar cordil para abrir filtro\n\nLos DD/CC están en planta\n\nFiltro de 2 cartuchos"
-    },
-    {
-      "id": "f-1305a-b",
-      "name": "F-1305A-B",
-      "general": false,
-      "instructions": "Entrando en rack central PP2 a la derecha, subiendo escaleras de gato\n\nCada filtro:\n\n1 DD/CC 2\" 150 Llave 27\n\n2 DD/CC 10\" 150 Llave 36\n\nTapa 24\" 150 Junta espiro Llave 50\n\nLlave 17 para desmontar internos\n\n12 cartuchos con sus 12 juntas de goma cuadradas, se pegan con Loctite\n\nLlevar pinza hidráulica para abrir bridas de los discos\n\nLos discos están en planta\n\nPrimero se colocan los DD/CC, después se hace el andamio para abrir/cerrar la tapa (Con un puly de 750KG) y después de desmontar el andamio se quitan los DD/CC\n\nSolarca se lleva los cartuchos sucios para limpiarlos, a veces cuando vuelven nos piden que los metamos en el horno de pp2 para acabar de secarlos. (Pero por lo general, llegan de Solarca sin necesidad de secarlos)"
-    },
-    {
-      "id": "f-1308a-b",
-      "name": "F-1308A-B",
-      "general": false,
-      "instructions": "A la entrada de planta en el compresor viejo subiendo unas escaleras, quedan a la altura de las rodillas\n\nCada filtro lleva una brida 10\"150  Llave 36 y una brida 1 1/2\"300  Llave 32  (Juntas espiro) \n\nLlevar traje TEAL"
-    },
-    {
-      "id": "f-1309",
-      "name": "F-1309",
-      "general": false,
-      "instructions": "Filtro a Ras de suelo en el compresor\n\nCarrete de 10\"150, hace falta andamio\n\nLlave 36\n\n3 Juntas espiro 10\"150\n\nLlave inglesa para desmontar tubing y poder girar carrete"
-    },
-    {
-      "id": "f-1501",
-      "name": "F-1501",
-      "general": false,
-      "instructions": "En la planta inferior al filtro guarda F-1302 (el de 56 cartuchos) casi arriba de todo, tocando la barandilla que mira a pp3\n\nGirar codo de 6\" 150 para acceder a la reducción y al equipo Llave 32  el codo tiene una brida de 1/2\"150  Llave 22\n\nLa reducción es de 6\"150 a 10\"150   Llave 32 y 36\n\nLleva 6 cartuchos (A cada cartucho nuevo hay que soldarle un tornillo de M8x35 con tuerca de INOX)  \nLlave 17 y Llave 18-19 para los cartuchos \n\nPara sacarlo hay que meter una palpalina o varilla por unas orejetas y sacar todos los filtros a la vez (2 personas)\n\n(2 juntas de 10\"150, 2 juntas de 6\"150 y 1 junta de 1/2\"150, todo espirometalica)"
-    },
-    {
-      "id": "f-1507",
-      "name": "F-1507",
-      "general": false,
-      "instructions": "Al lado de las escaleras para subir a los reactores hay unas escaleras de gato que suben a una plataforma\n\nEl cabezal es de 8\"150 Llave 32 (junta de teflón), también tiene 2 bridas de 1/2\"150 Llave 22 (juntas espiro) y una de 2\"150 Llave 27 (Junta espiro), hay que desmontar un tubing con la inglesa tambien\n\nAl sacar el cabezal hay que sacar una placa que presiona las mangas 4 tornillos llave 8-9 (o inglesa)\n\nLleva 4 mangas (pequeñas), cada manga lleva una torica (la torica hay que pedirla a parte)"
-    },
-    {
-      "id": "f-1802a-b",
-      "name": "F-1802A-B",
-      "general": false,
-      "instructions": "Fuera de extrusor a ras de suelo mirando hacia planta polimerización de pp2, por detrás de pp4  (Filtros Coco)\n\nSe monta andamio con barra de carga para llegar al cabezal y poder desmontarlo (a veces se usa carretilla para desmontar el cabezal)\n\nLos tornillos del cabezal son llave 24 y los internos también son 24\n\nCada filtro lleva 3 filtros de coco\n\nLa junta es de neopreno blanco de 3mm hecha a mano  (Aunque en alguna ocasión se pone goretex)\n\nLlevar puly 750kg y estrobo (solo si se desmonta con barra de carga)\n\nLa varilla interior ha de coincidir con un cap soldado en la parte interna del cabezal"
-    },
-    {
-      "id": "f-1809a",
-      "name": "F-1809A",
-      "general": false,
-      "instructions": "Dentro del extrusor a ras de suelo (Filtros Coco)\n\nSe desmonta cabezal a mano, minimo 2 personas (a veces se queda pegado y hay que usar un útil para despegarlo)\n\nLos tornillos del cabezal son llave 24 y los internos también son 24\n\nLleva 2 filtros de coco\n\nLa junta es de neopreno blanco de 3mm hecha a mano  (Aunque en alguna ocasión se pone goretex)\n\nLa varilla interior ha de coincidir con un cap soldado en la parte interna del cabezal"
-    },
-    {
-      "id": "f-1817",
-      "name": "F-1817",
-      "general": false,
-      "instructions": "En extrusión en la caseta de peróxido (la habitación frente a los silos)\n\nLa tapa es llave 19 y lleva una junta custom de cartón sacada de almacen\n\nPara acceder al filtro hay que desmontar 2 bridas 3/4\"300 con juntas espiro (2 juntas)\n\nEs un cartucho (parecido al de los catalizadores de PBD)"
-    },
-    {
-      "id": "f-1821",
-      "name": "F-1821",
-      "general": false,
-      "instructions": "2 Planta edificio extrusor\n\nAndamio \n\n1 Cartuchos grandote\n\nTapa \"custom\" junta goma con agujeros Llave 17   \n\nTornillos cartucho interior Llave 12-13   (o inglesa pequeña)"
-    },
-    {
-      "id": "f-1822",
-      "name": "F-1822",
-      "general": false,
-      "instructions": "1 Planta edificio extrusor\n\nAndamio (se puede hacer con una plataforma)\n\n2 Cartuchos grandotes\n\nTapa \"custom\" junta goma con agujeros Llave 19   (24 tornillos M12x30) \n\nTornillos cartuchos interiores Llave 12-13    (o inglesa pequeña)"
-    },
-    {
-      "id": "f-1902a",
-      "name": "F-1902A",
-      "general": false,
-      "instructions": "En la zona de los silos junto a la escalera que mira a la playa a ras de suelo (Filtros Coco)\n\nSe desmonta cabezal a mano, minimo 2 personas (a veces se queda pegado y hay que usar un útil para despegarlo)\n\nLos tornillos del cabezal son llave 24 y los internos también son 24\n\nLleva 2 filtros de coco\n\nLa junta es de neopreno blanco de 3mm hecha a mano  (Aunque en alguna ocasión se pone goretex) \n\nLa varilla interior ha de coincidir con un cap soldado en la parte interna del cabezal"
-    },
-    {
-      "id": "f-1914",
-      "name": "F-1914",
-      "general": false,
-      "instructions": "En la segunda planta de la torre que hay frente a la carretera (silos de extrusión pp2)\n\nEs un filtro con 2 cartuchos grandes\n\nLleva unos enganches para llegar al filtro (se abren con la mano, sin herramientas)\n\nY se desmontan aflojando una palometas (También a mano)"
-    },
-    {
-      "id": "p-1303",
-      "name": "P-1303",
-      "general": false,
-      "instructions": "A la entrada de planta al lado del compresor\n\nLlave grifa\n\nLleva junta de grafito ancha"
-    },
-    {
-      "id": "p-1303b",
-      "name": "P-1303B",
-      "general": false,
-      "instructions": "A la entrada de planta al lado del compresor\n\nLlave 22\n\nJunta de grafito con aro exterior (junta tipo custom)"
-    },
-    {
-      "id": "p-1501a-b",
-      "name": "P-1501A-B",
-      "general": false,
-      "instructions": "Al entrar en planta PP2 por Rack central a Ras de suelo\n\nCada filtro: 1 Junta 6\"150 espiro y 2 juntas 3\"150 espiro\n\nLlave 32 y 27\n\nHay un útil al lado de la caja de Chica para separar si no abre"
-    },
-    {
-      "id": "p-1502a-b",
-      "name": "P-1502A-B",
-      "general": false,
-      "instructions": "Al entrar en planta PP2 por Rack central a Ras de suelo\n\nCada filtro: 1 Junta 4\"150 espiro y 2 juntas 3\"150 de carton\n\nLlave 27\n\nHay un útil al lado de la caja de Chica para separar si no abre"
-    },
-    {
-      "id": "r-1402",
-      "name": "R-1402",
-      "general": false,
-      "instructions": "Planta 0 escaleras de gato.\n\n\n\n1 plataforma, desmontar válvula 3\"300 y montar acople en parte superior y BB/CC en la inferior\n\n2 Plataforma, 2= DD/8 1/2\"300 Llave 22\n\n\n\nPlanta 0\n\nAl lado compresor. 1 DD/CC 3/4\"150 Llave 22, 1 DD/CC 1\"300 Llave 27\n\nFrente escaleras. 1 DD/CC 2\"300 Llave 27, 2 DD/8 1\"300 Llave 27\n\nNicolini 1 1/2\"300 x 1\"300 Llave 32 y 27  (la de 1 1/2\"300 lleva una junta de grafito dentro de la linterna interior, suele usarse la misma)\n\nCarrete de 6\"300 x 3\"300 Llave 32\n\nEn el andamio. Girar codo mas carrete reducción (3 Bridas) 6\"300 Llave 32. 2 Bridas 1\"300 Llave 27 (1 Brida es de la valvula de instrumentacion) y 1 brida 3\"300 Llave 32\n\nLateral escalera. 1 DD/CC 6\"300 Llave 32\n\n\n\nPlanta 1\n\n3= DD/8 1\"300 Llave 27, 1= DD/8 RTJ 1\"1500 Llave 36, 4= DD/CC 1/2\"300 Llave 22.\n\nEn el andamio, 2 DD/CC 1/2\"300 Llave 22\n\nPasarela 1 DD/8 1\"300 Llave 27\n\nEn andamio, 2 LT de 4\"300 Llave 32 (una junta solo) Se coloca BB/CC\n\nEn andamio, 1 disco fino con cruceta de 24\"300 Llave 60\n\nEn andamio, 3 codos de 2\"300 Llave 27\n\nDesmontar para limpieza, válvula mas carrete mas FV-13102 (todo 3\"300) Llave 32. Dependiendo de si se desmonta el carrete por completo hay que poner en la parte inferior o 2 DD/CC 3/4\"300 Llave 27 o 2 BB/CC 3/4\"300\n\n\nPlanta 2\n\n2 DD/8 de 1 1/2\"300, 1 DD/CC 1 1/2\"300 (Quitar calorifugado) Llave 32\n\n2 DD/CC 1/2\"300 , 1 DD/8 1/2\"300 Llave 22\n\nDesmontar eyector 1 Brida 2\"300 con tornillos llave 24 mas 2 bridas 1/2\"300 Llave 22\n\n1 LT de 4\"300  Llave 32 (solo una junta) Se coloca BB/CC\n\nBB/HH 24\"300 Llave 60. Se usa una moza para calzar el pescante de la BB/HH y una palpalina grande. Ademas al cerrar se le pone goretex para que haga mejor cierre. \n\nLos tornillos de los registros interiores son llave 17\n\n\nPlanta 3 (No hay nada)\n\n\nPlanta 4\n\nVal. izquierda DD/8 8\"300 Llave 36\n\nval. derecha   DD/8 8\"300 Llave 36\n\nVal. central   10\"300 Llave 41, se gira con un tracktel 750kg. cogido a la orejeta del cabezal de la planta superior\n\nDD/8 4\"300   Llave 32\n\nEn andamio DD/CC 6\"300  (mala postura) Lleva pinza hidráulica\n\n\nPlanta 5\n\nDD/8 4\"300    Llave 32\n\n3 LT´s 4\"300   Llave 32 en cabeza reactor (Se coloca BB/CC, Cada LT lleva junta doble en esta planta)\n\nBB/HH 24\"300   Llave 60   se usa polipasto para dejar en el tramex encima de la viga, llevar estrobos. Se le pone goretex para el cierre \n\n\nPlanta 6\n\nEn andamio, 2 DD/8 2\"300 Llave 27, 2 DD/8 1\"300 Llave 27 y 2 DD/CC 1/2\"300 Llave 22"
-    }
-  ],
-  "PP3": [
-    {
-      "id": "aaa-valvula-retencion-y-mangueras-teal-pp3",
-      "name": "Valvula retencion y mangueras TEAL pp3",
-      "general": true,
-      "instructions": "En la caseta del teal de pp3, requiere de un pequeño andamio \n\nLlevar traje aluminizado y explosimetro\n\n- La retención es de 1/2\"600 (tiene que estar certificada) 2 juntas cobre 34.5x25.5x3mm  Llave 22\n\n- 1 manguera Brida PN10/40 DN20/20.9 1 junta de cobre 48x36x2mm (Las medidas pueden variar ligeramente, a veces las hace el tornero). Por el otro extremo la brida que hay lleva una junta de cartón que proporciona y monta producción  Llave 22\n\n- 1 manguera Brida PN10/40 DN15/21.3 1 junta de cobre 39x29x2.5mm (Las medidas pueden variar ligeramente, a veces las hace el tornero). Por el otro extremo la brida que hay lleva una junta de cartón que proporciona y monta producción   Llave 22"
-    },
-    {
-      "id": "c-502a-b",
-      "name": "C-502A-B",
-      "general": false,
-      "instructions": "Al lado compresores, en una pequeña plataforma a 1 metro del suelo\n\n2 Juntas de cartón de 14\"150   Llave 41\n\n1 Junta DN300 PN10 378x324mm(es similar a 10\"150)   Llave 32"
-    },
-    {
-      "id": "c-901a",
-      "name": "C-901A",
-      "general": false,
-      "instructions": "Frente a extrusión PP3, dentro de la cabina insonorizada\n\n1 Filtro grande\n\nAflojar tuerca llave 24 (o inglesa) para sustituirlo\n\nLlevar tapones"
-    },
-    {
-      "id": "c-902b",
-      "name": "C-902B",
-      "general": false,
-      "instructions": "Frente a extrusión PP3, dentro de la cabina insonorizada\n\n1 Filtro grande\n\nAflojar tuerca llave 24 (o inglesa) para sustituirlo\n\nLlevar tapones"
-    },
-    {
-      "id": "e-202-filtro-cw",
-      "name": "E-202 (Filtro CW)",
-      "general": false,
-      "instructions": "Intercambiador grande rack central (Fuente luminosa)\n\nJunta espiro 14\"150    Llave 41"
-    },
-    {
-      "id": "e-502-filtros-cw",
-      "name": "E-502 (Filtros CW)",
-      "general": false,
-      "instructions": "A mitad de pasillo central junto intercambiador pequeño de placas, a ras de suelo\n\nRequiere de una plataforma o escalera móviles para llegar\n\nSon dos filtros iguales\n\nLa junta es de goma blanca cortada a mano (a veces se coloca goretex)  Llave 24   (Cada filtro)"
-    },
-    {
-      "id": "e-505-filtros",
-      "name": "E-505 (Filtros)",
-      "general": false,
-      "instructions": "Intercambiador muy pequeño a ras de suelo, Rack central (en el C-501)\n\nEl filtro de CW se hace con Llave grifa\n\nEl filtro lado proceso es de 3\"150 junta espiro  Llave 27"
-    },
-    {
-      "id": "e-663-filtro-cw",
-      "name": "E-663 (Filtro CW)",
-      "general": false,
-      "instructions": "Entrando en planta por el rack, justo entrar a la derecha, filtro a la altura de la cadera\n\nSolo hace falta una grifa (un poco mas grande que la estándar) es una rosca"
-    },
-    {
-      "id": "f-308-a-y-b-filtro-c-301",
-      "name": "F-308-A y B (Filtro C-301)",
-      "general": false,
-      "instructions": "Filtro del compresor (El filtro \"A\" es el de difícil acceso, el \"B\" es mas cómodo de hacer)\n\nSubiendo las escalerillas al compresor, final de planta \n\nJunta 8\" (encastrada de grafito aunque en ocasiones se ha hecho a mano de cartón) Llave 36\n\nJunta 1/2\" 300 Espirometalica Llave 22\n\nTraje teal"
-    },
-    {
-      "id": "p-502a-b",
-      "name": "P-502A-B",
-      "general": false,
-      "instructions": "Limpiar filtros\n\n2 Juntas Espiro 4\"150 (cada filtro) Llave 27"
-    }
-  ],
-  "PBD": [
-    {
-      "id": "aaa-grado-cable",
-      "name": "Grado cable",
-      "general": true,
-      "instructions": "El grado cable son 3 permisos:\n\nFE-2059A (Filtro imanes)\n\nRejillas salida aire (Al lado silo ME-2055)\n\nFiltros ventiladores (Torre de mezcla):\n\nPZ-2021-A,b,c,d,e y f\n\nPZ-2024-A,b,c,d,e,f y g\n\nPZ-2036 (Pelletron) arriba de todo\n\nHacen falta unos 15 filtros de 500x500 y  1 filtro de 1000x1200 para el pelletron"
-    },
-    {
-      "id": "fe-2059a",
-      "name": "FE-2059A",
-      "general": false,
-      "instructions": "Equipo grado cable, filtro imanes\n\nTapa 18\"150 Llave 46 Junta Teflón (No suele cambiarse)\n\nLos filtros se desenroscan a mano y se limpian con un trapo\n\nEstan bastante viejos y torcidos, al roscarlos con medio giro es suficiente, sin apretar sino no hay forma de aflojarlo a la siguiente vez"
-    },
-    {
-      "id": "fz-1113",
-      "name": "FZ-1113",
-      "general": false,
-      "instructions": "A la entrada del extrusor, frente al ME-1056. A ras de suelo\n\nTapa \"custom\", Junta torica     (El diámetro es entre 2 y 3 pulgadas)\n\nLlave 24\n\nEquipo y espárragos de INOX"
-    },
-    {
-      "id": "fz-2063",
-      "name": "FZ-2063",
-      "general": false,
-      "instructions": "Dentro extrusor, a ras de suelo junto a la criba\n\nTapa 8\"150    Llave 32    (La junta es de teflón, se suele usar la misma)\n\n1 Cartucho de plástico\n\nSi no hay recambio se limpia como se pueda. Equipo y tornillería de INOX"
-    },
-    {
-      "id": "pc-1038a-b-c-d",
-      "name": "PC-1038A-B-C-D",
-      "general": false,
-      "instructions": "Al lado refrigerantes, a ras de suelo. Reaccion\n\nPara limpiar los filtros:\n\nEl \"A\" y \"D\" son Llave 22\n\nEl \"B\" y \"C\" son Llave 27\n\nLas juntas son de cartón cortadas a mano"
-    },
-    {
-      "id": "pc-2038a-b-c-d",
-      "name": "PC-2038A-B-C-D",
-      "general": false,
-      "instructions": "Al lado refrigerantes, a ras de suelo. Reaccion\n\nPara limpiar los filtros:\n\nEl \"A\" es Llave 27\n\nEl \"B\",\"C\" y \"D\" son Llave 22\n\nLas juntas son de cartón cortadas a mano"
-    },
-    {
-      "id": "px-3002a-b",
-      "name": "PX-3002A-B",
-      "general": false,
-      "instructions": "Al lado balsa de los patos, Servicios\n\nPara limpiar filtros:\n\nImpulsion-  2 Juntas cartón 8\"150   Llave 32  (El filtro es una raqueta)\n\nAspiracion- 1 Junta cartón 3\"150 y 2 juntas 8\"150 cartón  Llave 24, (27) y 32   (Es una reducción)"
-    },
-    {
-      "id": "te-1056-b",
-      "name": "TE-1056-B",
-      "general": false,
-      "instructions": "Primera Plataforma frente a taller de PBD\n\nDe izquierda a derecha es el primer intercambiador\n\n2 DD/CC de 6\"150 Lado carcasa   Llave 32\n\nCabezales Llave 32\n\n2 Bridas distribuidora 8\"150 Llave 32\n\nLa tornillería de la flotante es Llave 32 y el cancamo para sacarlo con la grua M-20\n\nHace falta grua para los cabezales y flotante\n\nHace falta andamio para llegar a 1 DD/CC lado carcasa y para los cabezales y bridas distribuidora\n\nAl sacar la distribuidora hay que colocar 2 BB/CC 8\"150\n\nPara la PP/HH (tanto lado carcasa como lado proceso) se puede elegir hacer la prueba o bien montando acoples roscados de 3/4 NPT (Tanto el llenado como el venteo) o por las bridas de 1 1/2\"300 (Tanto el llenado como el venteo)\n\nPP/HH lado tubos 7,50Kg, Lado carcasa 12Kg\n\nLas juntas metaloplasticas se montan con camprofile de 10 o 12mm por las 2 caras\n\nSi se desmonta el haz tubular hay que pedir permiso para desmontar barandilla\n\nEn este no van los aros de prueba rojos que hay en la planta inferior\n\nHay un Aro (el aro es nuevo, no lo hemos probado, el que mira a taller) para poder hacer pp/hh lado carcasa y ver si hay fugas desde un lado (el otro tiene que estar montado con flotante y cabezal por falta de ese aro)"
-    },
-    {
-      "id": "te-2056",
-      "name": "TE-2056",
-      "general": false,
-      "instructions": "Primera Plataforma frente a taller de PBD\n\nDe izquierda a derecha es el tercer intercambiador\n\n2 DD/CC de 6\"150 Lado carcasa   Llave 32\n\nCabezales Llave 32\n\n2 Bridas distribuidora 6\"150 Llave 32\n\nLa tornillería de la flotante es Llave 32 y el cancamo para sacarlo con la grua M-22\n\nHace falta grua para los cabezales y flotante\n\nHace falta andamio para llegar a los 2 DD/CC lado carcasa y para los cabezales y brida distribuidora\n\nAl sacar la distribuidora hay que colocar 2 BB/CC 6\"150\n\nPara la PP/HH (tanto lado carcasa como lado proceso) se puede elegir hacer la prueba o bien montando acoples roscados de 3/4 NPT (Tanto el llenado como el venteo) o por las bridas de 1 1/2\"300 (Tanto el llenado como el venteo)\n\nPP/HH lado tubos 7,12Kg, lado carcasa 10,50Kg\n\nSe monta Goretex en los aros de prueba para hacer las PP/HH, la empaquetadura del aro es de 10mm\n\nLas juntas metaloplasticas se montan con camprofile de 10 o 12mm por las 2 caras\n\nSi se desmonta el haz tubular hay que pedir permiso para desmontar barandilla\n\nEn este si van los aros de prueba (los de color rojo espirrados a la pared del piso inferior)"
-    }
-  ]
-}
-</script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1148,12 +812,10 @@
 </script>
 
 <script>
-const SEED_DATA = JSON.parse(document.getElementById('data-json').textContent);
 let LIVE_DATA = null;
 let currentUser = null;
-let firestoreCollectionEmpty = null; // null = unknown, true/false once first snapshot arrives
 
-function currentData(){ return LIVE_DATA || SEED_DATA; }
+function currentData(){ return LIVE_DATA || {}; }
 
 const ZONES = [
   {
@@ -1299,20 +961,6 @@ function renderEquipList(key){
   back.innerHTML = `${iconLeft()} Volver a zonas`;
   back.addEventListener('click', goHome);
   wrap.appendChild(back);
-
-  if(currentUser && firestoreCollectionEmpty === true){
-    const banner = document.createElement('div');
-    banner.className = 'migrate-banner';
-    banner.innerHTML = `
-      <div>
-        <strong>Aún no has publicado los equipos en la nube.</strong>
-        <p>Pulsa el botón para subir los equipos actuales una sola vez. Después, todo lo que añadas o edites se guardará automáticamente en la nube.</p>
-      </div>
-      <button class="btn-primary" id="migrateBtn">Publicar a la nube</button>
-    `;
-    wrap.appendChild(banner);
-    banner.querySelector('#migrateBtn').addEventListener('click', migrateSeedToCloud);
-  }
 
   const searchWrap = document.createElement('div');
   searchWrap.className = 'search-wrap';
@@ -1552,38 +1200,6 @@ scrim.addEventListener('click', closeDetail);
 closeBtn.addEventListener('click', closeDetail);
 document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeDetail(); });
 
-/* ---------- MIGRATION (one-time: seed data -> Firestore) ---------- */
-async function migrateSeedToCloud(){
-  const ok = confirm('Esto subirá todos los equipos actuales a la nube. Es una operación de un solo uso. ¿Continuar?');
-  if(!ok) return;
-  try{
-    const { db, collection, doc, writeBatch } = window.fbApi;
-    let batch = writeBatch(db);
-    let count = 0;
-    for(const zoneKey of Object.keys(SEED_DATA)){
-      for(const item of SEED_DATA[zoneKey]){
-        const ref = doc(collection(db, 'equipos'));
-        batch.set(ref, {
-          zone: zoneKey,
-          name: item.name,
-          general: !!item.general,
-          instructions: item.instructions,
-          updatedAt: Date.now()
-        });
-        count++;
-        if(count % 400 === 0){
-          await batch.commit();
-          batch = writeBatch(db);
-        }
-      }
-    }
-    await batch.commit();
-    alert('¡Listo! Se han publicado ' + count + ' equipos en la nube.');
-  }catch(err){
-    alert('Error al publicar: ' + err.message);
-  }
-}
-
 /* ---------- AUTH ---------- */
 const authBtn = document.getElementById('authBtn');
 const authPop = document.getElementById('authPop');
@@ -1643,8 +1259,43 @@ function updateAuthUI(){
   }
 }
 
+function iconLock(){
+  return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>`;
+}
+
+function renderLoginGate(){
+  const wrap = document.createElement('div');
+  wrap.className = 'view';
+  wrap.innerHTML = `
+    <div class="login-gate">
+      <div class="login-gate-icon">${iconLock()}</div>
+      <h2>Acceso restringido</h2>
+      <p>Inicia sesión con tu cuenta para ver los equipos y sus instrucciones de trabajo.</p>
+    </div>
+  `;
+  return wrap;
+}
+
+function renderLoadingState(){
+  const wrap = document.createElement('div');
+  wrap.className = 'view';
+  wrap.innerHTML = `<div class="login-gate"><p>Comprobando sesión…</p></div>`;
+  return wrap;
+}
+
+let authChecked = false;
+let unsubscribeEquipos = null;
+
 function rerenderCurrentView(){
   viewport.innerHTML = '';
+  if(!authChecked){
+    viewport.appendChild(renderLoadingState());
+    return;
+  }
+  if(!currentUser){
+    viewport.appendChild(renderLoginGate());
+    return;
+  }
   if(!state.zone){
     viewport.appendChild(renderZones());
   } else {
@@ -1657,33 +1308,38 @@ function initFirebaseWiring(){
 
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
+    authChecked = true;
     updateAuthUI();
-    rerenderCurrentView();
-  });
 
-  onSnapshot(collection(db, 'equipos'), (snap) => {
-    if(snap.empty){
-      firestoreCollectionEmpty = true;
-      LIVE_DATA = null;
-    } else {
-      firestoreCollectionEmpty = false;
-      const grouped = {};
-      snap.forEach(docSnap => {
-        const d = docSnap.data();
-        if(!grouped[d.zone]) grouped[d.zone] = [];
-        grouped[d.zone].push({
-          id: docSnap.id,
-          name: d.name,
-          general: !!d.general,
-          instructions: d.instructions || ''
+    if(unsubscribeEquipos){ unsubscribeEquipos(); unsubscribeEquipos = null; }
+
+    if(user){
+      unsubscribeEquipos = onSnapshot(collection(db, 'equipos'), (snap) => {
+        const grouped = {};
+        snap.forEach(docSnap => {
+          const d = docSnap.data();
+          if(!grouped[d.zone]) grouped[d.zone] = [];
+          grouped[d.zone].push({
+            id: docSnap.id,
+            name: d.name,
+            general: !!d.general,
+            instructions: d.instructions || ''
+          });
         });
+        Object.keys(grouped).forEach(z => grouped[z].sort((a,b) => (b.general - a.general) || a.name.localeCompare(b.name)));
+        LIVE_DATA = grouped;
+        rerenderCurrentView();
+      }, (err) => {
+        console.error('Firestore sync error:', err);
       });
-      Object.keys(grouped).forEach(z => grouped[z].sort((a,b) => (b.general - a.general) || a.name.localeCompare(b.name)));
-      LIVE_DATA = grouped;
+    } else {
+      LIVE_DATA = null;
+      state.zone = null;
+      renderBreadcrumb();
+      closeDetail();
     }
+
     rerenderCurrentView();
-  }, (err) => {
-    console.error('Firestore sync error:', err);
   });
 }
 
@@ -1695,7 +1351,7 @@ if(window.fbApi){
 
 /* ---------- INIT ---------- */
 renderBreadcrumb();
-viewport.appendChild(renderZones());
+viewport.appendChild(renderLoadingState());
 </script>
 
 </body>
