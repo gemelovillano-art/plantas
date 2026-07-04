@@ -402,12 +402,9 @@
   }
   .auth-btn:hover{ background:var(--accent-soft); color:var(--accent-2); border-color:rgba(255,138,61,0.3); }
   .auth-pop{
-    display:flex;
+    display:none;
     flex-direction:column;
     gap:10px;
-  }
-  .auth-pop[hidden]{ display:none; }
-  .auth-pop{
     position:absolute;
     top:calc(100% + 10px);
     right:0;
@@ -419,6 +416,7 @@
     box-shadow:var(--shadow);
     z-index:50;
   }
+  .auth-pop.open{ display:flex; }
   .auth-pop input{
     width:100%;
     padding:10px 12px;
@@ -712,7 +710,7 @@
     <nav class="breadcrumb" id="breadcrumb"></nav>
     <div class="auth-box" id="authBox">
       <button class="auth-btn" id="authBtn" type="button">Iniciar sesión</button>
-      <div class="auth-pop" id="authPop" hidden>
+      <div class="auth-pop" id="authPop">
         <input type="email" id="authEmail" placeholder="Email" autocomplete="username">
         <input type="password" id="authPass" placeholder="Contraseña" autocomplete="current-password">
         <button id="authSubmit" type="button">Entrar</button>
@@ -1586,12 +1584,23 @@ const authPass = document.getElementById('authPass');
 const authSubmit = document.getElementById('authSubmit');
 const authError = document.getElementById('authError');
 
-authBtn.addEventListener('click', () => {
+authBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
   if(currentUser){
     window.fbApi.signOut(window.fbApi.auth);
     return;
   }
-  authPop.hidden = !authPop.hidden;
+  authPop.classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  if(!authPop.classList.contains('open')) return;
+  if(authPop.contains(e.target) || e.target === authBtn) return;
+  authPop.classList.remove('open');
+});
+
+authPass.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') authSubmit.click();
 });
 
 authSubmit.addEventListener('click', async () => {
@@ -1600,7 +1609,7 @@ authSubmit.addEventListener('click', async () => {
   authSubmit.textContent = 'Entrando...';
   try{
     await window.fbApi.signInWithEmailAndPassword(window.fbApi.auth, authEmail.value.trim(), authPass.value);
-    authPop.hidden = true;
+    authPop.classList.remove('open');
     authEmail.value = '';
     authPass.value = '';
   }catch(err){
@@ -1614,7 +1623,7 @@ authSubmit.addEventListener('click', async () => {
 function updateAuthUI(){
   if(currentUser){
     authBtn.textContent = 'Cerrar sesión (' + currentUser.email + ')';
-    authPop.hidden = true;
+    authPop.classList.remove('open');
   } else {
     authBtn.textContent = 'Iniciar sesión';
   }
